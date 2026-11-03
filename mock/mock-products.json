@@ -3,14 +3,16 @@
   "open": true,
   "sluitdatum": "2026-12-03T22:59:59.000Z",
   "producten": [
-    { "product": "Erwtensoep, 1 liter", "prijs": 795, "actieAantal": null, "actiePrijs": null, "beschikbaar": null },
-    { "product": "Rookworst", "prijs": 350, "actieAantal": 3, "actiePrijs": 1000, "beschikbaar": null },
-    { "product": "Panettone cake", "prijs": 595, "actieAantal": null, "actiePrijs": null, "beschikbaar": null },
-    { "product": "Twixkoek", "prijs": 695, "actieAantal": null, "actiePrijs": null, "beschikbaar": 4 },
-    { "product": "Speculaasbrokken", "prijs": 495, "actieAantal": null, "actiePrijs": null, "beschikbaar": 0 },
-    { "product": "Eieren, 10 stuks", "prijs": 350, "actieAantal": null, "actiePrijs": null, "beschikbaar": null },
-    { "product": "Granola, 500 g", "prijs": 695, "actieAantal": null, "actiePrijs": null, "beschikbaar": null },
-    { "product": "Macadamiamix gezouten", "prijs": null, "actieAantal": null, "actiePrijs": null, "beschikbaar": null },
-    { "product": "Macadamiamix ongezouten", "prijs": null, "actieAantal": null, "actiePrijs": null, "beschikbaar": null }
+    { "product": "Erwtensoep, 1 liter", "prijs": 795, "actieAantal": null, "actiePrijs": null, "beschikbaar": null, "foto": "erwtensoep.webp", "omschrijving": "" },
+    { "product": "Rookworst", "prijs": 350, "actieAantal": 3, "actiePrijs": 1000, "beschikbaar": null, "foto": "", "omschrijving": "" },
+    { "product": "Panettone cake", "prijs": 595, "actieAantal": null, "actiePrijs": null, "beschikbaar": null, "foto": "", "omschrijving": "" },
+    { "product": "Twixkoek", "prijs": 695, "actieAantal": null, "actiePrijs": null, "beschikbaar": 4, "foto": "", "omschrijving": "" },
+    { "product": "Speculaasbrokken", "prijs": 495, "actieAantal": null, "actiePrijs": null, "beschikbaar": 0, "foto": "", "omschrijving": "" },
+    { "product": "Eieren, 10 stuks", "prijs": 350, "actieAantal": null, "actiePrijs": null, "beschikbaar": null, "foto": "", "omschrijving": "" },
+    { "product": "Granola, 500 g", "prijs": 695, "actieAantal": null, "actiePrijs": null, "beschikbaar": null, "foto": "granola.jpg", "omschrijving": "" },
+    { "product": "Advocaat, groot", "prijs": 925, "actieAantal": null, "actiePrijs": null, "beschikbaar": null, "foto": "advocaat.jpg", "omschrijving": "Huisgemaakt door Jaap en zijn ouders" },
+    { "product": "Advocaat, klein", "prijs": 625, "actieAantal": null, "actiePrijs": null, "beschikbaar": null, "foto": "advocaat.jpg", "omschrijving": "Huisgemaakt door Jaap en zijn ouders" },
+    { "product": "Macadamiamix gezouten", "prijs": null, "actieAantal": null, "actiePrijs": null, "beschikbaar": null, "foto": "", "omschrijving": "" },
+    { "product": "Macadamiamix ongezouten", "prijs": null, "actieAantal": null, "actiePrijs": null, "beschikbaar": null, "foto": "", "omschrijving": "" }
   ]
 }

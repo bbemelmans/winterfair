@@ -19,20 +19,20 @@ var TAB_BESTELLINGEN = 'Bestellingen';
 var TAB_INSTELLINGEN = 'Instellingen';
 var TIJDZONE = 'Europe/Amsterdam';
 
-var PRODUCT_KOLOMMEN = ['volgorde', 'product', 'prijs', 'actie_aantal', 'actie_prijs', 'actief', 'max_voorraad'];
+var PRODUCT_KOLOMMEN = ['volgorde', 'product', 'prijs', 'actie_aantal', 'actie_prijs', 'actief', 'max_voorraad', 'foto', 'omschrijving'];
 var VASTE_KOLOMMEN = ['tijdstip', 'bestelnummer', 'naam', 'contact', 'opmerking', 'regels', 'totaal'];
 var MAX_PER_PRODUCT = 50;
 
 var STARTLIJST = [
-  [1, 'Erwtensoep, 1 liter', 7.95, '', '', 'ja', ''],
-  [2, 'Rookworst', 3.50, 3, 10.00, 'ja', ''],
-  [3, 'Panettone cake', 5.95, '', '', 'ja', ''],
-  [4, 'Twixkoek', 6.95, '', '', 'ja', ''],
-  [5, 'Speculaasbrokken', 4.95, '', '', 'ja', ''],
-  [6, 'Eieren, 10 stuks', 3.50, '', '', 'ja', ''],
-  [7, 'Granola, 500 g', 6.95, '', '', 'ja', ''],
-  [8, 'Macadamiamix gezouten', '[PRIJS]', '', '', 'ja', ''],
-  [9, 'Macadamiamix ongezouten', '[PRIJS]', '', '', 'ja', '']
+  [1, 'Erwtensoep, 1 liter', 7.95, '', '', 'ja', '', '', ''],
+  [2, 'Rookworst', 3.50, 3, 10.00, 'ja', '', '', ''],
+  [3, 'Panettone cake', 5.95, '', '', 'ja', '', '', ''],
+  [4, 'Twixkoek', 6.95, '', '', 'ja', '', '', ''],
+  [5, 'Speculaasbrokken', 4.95, '', '', 'ja', '', '', ''],
+  [6, 'Eieren, 10 stuks', 3.50, '', '', 'ja', '', '', ''],
+  [7, 'Granola, 500 g', 6.95, '', '', 'ja', '', '', ''],
+  [8, 'Macadamiamix gezouten', '[PRIJS]', '', '', 'ja', '', '', ''],
+  [9, 'Macadamiamix ongezouten', '[PRIJS]', '', '', 'ja', '', '', '']
 ];
 
 
@@ -53,7 +53,9 @@ function doGet() {
           prijs: p.prijs,
           actieAantal: p.actieAantal,
           actiePrijs: p.actiePrijs,
-          beschikbaar: p.maxVoorraad == null ? null : Math.max(0, p.maxVoorraad - (verkocht[p.product] || 0))
+          beschikbaar: p.maxVoorraad == null ? null : Math.max(0, p.maxVoorraad - (verkocht[p.product] || 0)),
+          foto: p.foto,
+          omschrijving: p.omschrijving
         };
       })
     });
@@ -257,7 +259,9 @@ function leesProducten() {
       actieAantal: actieAantal > 1 && actiePrijs != null ? actieAantal : null,
       actiePrijs: actieAantal > 1 && actiePrijs != null ? actiePrijs : null,
       actief: isActief(rij[k.actief]),
-      maxVoorraad: k.max_voorraad == null ? null : geheelGetal(rij[k.max_voorraad])
+      maxVoorraad: k.max_voorraad == null ? null : geheelGetal(rij[k.max_voorraad]),
+      foto: k.foto == null ? '' : String(rij[k.foto] || '').trim(),
+      omschrijving: k.omschrijving == null ? '' : String(rij[k.omschrijving] || '').trim()
     });
   }
   producten.sort(function (a, b) { return a.volgorde - b.volgorde; });

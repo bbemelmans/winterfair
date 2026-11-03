@@ -101,6 +101,48 @@
     return tekst;
   }
 
+  // Alleen een gewone bestandsnaam uit de Sheet, bijv. "advocaat.jpg".
+  function fotoPad(p) {
+    var naam = String(p.foto || '').trim();
+    return /^[\w\-.]+\.(jpe?g|png|webp)$/i.test(naam) ? 'img/producten/' + naam : '';
+  }
+
+  function legeFoto(tekst) {
+    var leeg = maak('span', 'product__foto product__foto--leeg', tekst);
+    leeg.setAttribute('aria-hidden', 'true');
+    return leeg;
+  }
+
+  function fotoElement(p) {
+    var pad = fotoPad(p);
+    if (!pad) return null;
+
+    var knop = maak('button', 'product__foto');
+    knop.type = 'button';
+    knop.setAttribute('aria-label', 'Foto van ' + p.product + ' vergroten');
+    var img = maak('img');
+    img.src = pad;
+    img.alt = '';
+    img.width = 48;
+    img.height = 48;
+    img.loading = 'lazy';
+    // Bestandsnaam staat in de Sheet maar de foto is er (nog) niet.
+    img.addEventListener('error', function () { knop.replaceWith(legeFoto('foto volgt')); });
+    knop.appendChild(img);
+    knop.addEventListener('click', function () { toonFoto(pad, p); });
+    return knop;
+  }
+
+  function toonFoto(pad, p) {
+    var venster = document.getElementById('fotovenster');
+    var img = document.getElementById('fotovenster-img');
+    img.src = pad;
+    img.alt = 'Foto van ' + p.product;
+    document.getElementById('fotovenster-titel').textContent = p.product;
+    document.getElementById('fotovenster-tekst').textContent = p.omschrijving || '';
+    venster.showModal();
+  }
+
   function toonProducten() {
     el.lijst.textContent = '';
     producten.forEach(function (p) {
@@ -108,9 +150,12 @@
       var max = maxAantal(p);
 
       var li = maak('li', 'product');
+      var foto = fotoElement(p);
+      if (foto) li.appendChild(foto);
       var info = maak('div', 'product__info');
       info.appendChild(maak('div', 'product__naam', p.product));
       info.appendChild(maak('div', 'product__prijs', prijsTekst(p)));
+      if (p.omschrijving) info.appendChild(maak('div', 'product__omschrijving', p.omschrijving));
       if (p.prijs != null && p.beschikbaar === 0) {
         info.appendChild(maak('div', 'product__let', 'Uitverkocht'));
       } else if (p.prijs != null && p.beschikbaar != null && p.beschikbaar <= 10) {
@@ -338,6 +383,11 @@
       })
       .catch(function (err) { console.error('Sponsors laden mislukt', err); });
   }
+
+  // Fotovenster sluit ook bij een tik naast de foto.
+  document.getElementById('fotovenster').addEventListener('click', function (event) {
+    if (event.target === event.currentTarget) event.currentTarget.close();
+  });
 
   laadFormulier();
   laadSponsors();

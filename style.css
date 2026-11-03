@@ -115,11 +115,34 @@ a.kaart__klein { min-height: 44px; display: inline-flex; align-items: center; ma
 
 .producten { margin: 0; padding: 4px 16px; border: 0; background: var(--wit); border-radius: 14px; min-width: 0; }
 .producten__lijst { list-style: none; margin: 0; padding: 0; }
-.product { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--lijn-licht); }
+.product { display: flex; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--lijn-licht); }
 .product__info { flex: 1; min-width: 0; }
-.product__naam { font-size: 15px; font-weight: 500; }
+.product__naam { font-size: 15px; font-weight: 500; overflow-wrap: anywhere; hyphens: auto; }
 .product__prijs { font-size: 13px; color: var(--tekst-zacht); }
+.product__omschrijving { font-size: 13px; color: var(--label-bruin); font-style: italic; line-height: 1.35; }
 .product__let { font-size: 13px; color: var(--bordeaux); font-weight: 600; }
+
+/* Productfoto: rond, zoals de cirkels op de bestelflyer. Tik = vergroten. */
+.product__foto {
+  flex: none; width: 52px; height: 52px; padding: 0; border-radius: 50%;
+  border: 2px solid var(--bordeaux); background: var(--olijf); overflow: hidden; cursor: zoom-in;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.product__foto img { width: 100%; height: 100%; object-fit: cover; }
+.product__foto--leeg {
+  border-color: var(--knoprand); background: var(--vlak-licht); cursor: default;
+  font-size: 10px; line-height: 1.1; text-align: center; color: var(--tekst-klein);
+}
+
+.fotovenster {
+  width: min(92vw, 520px); padding: 16px; border: 0; border-radius: 16px;
+  background: var(--achtergrond); color: var(--donkergroen);
+}
+.fotovenster::backdrop { background: rgba(46, 58, 47, 0.75); }
+.fotovenster img { width: 100%; border-radius: 12px; border: 2px solid var(--bordeaux); }
+.fotovenster__titel { margin: 12px 0 0; font-family: var(--kop-font); font-size: 30px; font-weight: 700; line-height: 1.1; }
+.fotovenster__tekst { margin: 2px 0 12px; font-style: italic; color: var(--label-bruin); }
+.fotovenster__tekst:empty { margin-bottom: 8px; }
 .teller { display: flex; align-items: center; gap: 4px; }
 .teller button {
   width: 44px; height: 44px; border-radius: 22px; border: 1px solid var(--knoprand);

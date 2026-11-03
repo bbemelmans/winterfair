@@ -111,6 +111,20 @@ Alles gaat via het tabblad **Producten**. Je hoeft geen code te wijzigen en niet
 | `actie_aantal` / `actie_prijs` | Bijvoorbeeld `3` en `10,00`: per volle set van 3 betaal je € 10,00, de rest kost de stukprijs. Leeg = geen actie. |
 | `actief` | `ja` = op de pagina, `nee` = verborgen. |
 | `max_voorraad` | Optioneel. Hoeveel er in totaal verkocht mag worden. Bij 0 over staat er "Uitverkocht". Leeg = onbeperkt. |
+| `foto` | Optioneel. Bestandsnaam van de productfoto in de map `img/producten/`, bijvoorbeeld `advocaat.jpg`. Leeg = geen foto. |
+| `omschrijving` | Optioneel. Korte regel onder de prijs, bijvoorbeeld `Huisgemaakt door Jaap en zijn ouders`. |
+
+### Productfoto toevoegen
+
+1. Zet de foto (jpg, png of webp) op GitHub in de map `img/producten/`: open die map in de repo en kies **Add file → Upload files**. Gebruik een korte naam zonder spaties, bijvoorbeeld `rookworst.jpg`.
+2. Typ in de Sheet bij dat product in de kolom `foto` precies die naam.
+3. Herlaad de pagina. De foto staat als rondje links van het product; wie erop tikt, ziet hem groot.
+
+Staat de naam in de Sheet maar is de foto er (nog) niet, dan toont de pagina een rondje met "foto volgt".
+
+Gebruik alleen eigen foto's, of foto's waarvan je zeker weet dat je ze mag gebruiken. Een foto van een andere website (vaak te herkennen aan een naam of watermerk erop) mag meestal niet.
+
+> **Al een Sheet van vóór de productfoto's?** Typ in tabblad **Producten** in de eerste lege kolommen de koppen `foto` en `omschrijving`. Plak daarna de nieuwe `apps-script/Code.gs` in de editor en implementeer een **nieuwe versie** (zie de Let op bij stap 3).
 
 - **Prijs van de macadamiamixen invullen:** typ de prijs in de kolom `prijs` (in plaats van `[PRIJS]`). Daarna zijn ze meteen te bestellen.
 - **Nieuw product:** voeg een rij toe. Bij de eerste bestelling krijgt het vanzelf een eigen kolom in Bestellingen.
