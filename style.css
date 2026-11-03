@@ -40,6 +40,9 @@ p { margin: 0; }
 a { color: var(--bordeaux); }
 a:hover { color: var(--bordeaux-donker); }
 
+/* Snel twee keer tikken op een knop mag niet inzoomen; knijpen om te zoomen blijft werken. */
+button, a, input, textarea { touch-action: manipulation; }
+
 :focus-visible { outline: 3px solid var(--bordeaux); outline-offset: 2px; }
 
 [hidden] { display: none !important; }
