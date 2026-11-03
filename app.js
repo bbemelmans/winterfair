@@ -219,13 +219,12 @@
     b.appendChild(maak('p', 'betalen', 'Betalen: [BETAALWIJZE]'));
 
     var wijzigen = maak('p', null, 'Wil je je bestelling wijzigen? ');
-    var app = maak('a', null, 'Stuur Marianne een berichtje');
+    var app = maak('a', null, 'Stuur Marianne een berichtje via WhatsApp');
     app.href = WHATSAPP + '?text=' + encodeURIComponent('Hoi Marianne, ik wil mijn Winterfair-bestelling ' + antwoord.bestelnummer + ' wijzigen.');
     app.target = '_blank';
     app.rel = 'noopener';
     app.appendChild(maak('span', 'sr-only', ' (opent in nieuw tabblad)'));
     wijzigen.appendChild(app);
-    wijzigen.appendChild(document.createTextNode(' via WhatsApp en noem je bestelnummer.'));
     b.appendChild(wijzigen);
 
     el.formulier.hidden = true;

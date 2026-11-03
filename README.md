@@ -173,6 +173,8 @@ Op de pagina beloven we: *"We gebruiken je gegevens alleen voor deze bestelling 
   - in `app.js` (de bevestiging na het bestellen).
 - Link Jaap Pijpelink: in `sponsors.json`.
 
+**Na een wijziging in `app.js`, `reken.js`, `style.css` of `config.js`:** verhoog in `index.html` het nummer achter `?v=` bij alle vier de bestanden (bijv. `?v=4` → `?v=5`). Anders kunnen bezoekers nog even de oude versie uit hun browsergeheugen zien.
+
 ## Testen op je eigen computer (optioneel)
 
 Hiervoor heb je [Node.js](https://nodejs.org) nodig.
