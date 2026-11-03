@@ -229,7 +229,10 @@
 
     el.formulier.hidden = true;
     b.hidden = false;
-    b.focus();
+    // Het formulier verdwijnt, waardoor de pagina korter wordt; zet de bedankkop bovenaan in beeld.
+    b.focus({ preventScroll: true });
+    var top = b.getBoundingClientRect().top + window.pageYOffset - 16;
+    window.scrollTo({ top: Math.max(0, top), behavior: 'auto' });
   }
 
   el.formulier.addEventListener('submit', function (event) {
