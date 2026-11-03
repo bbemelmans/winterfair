@@ -10,7 +10,8 @@
   'use strict';
 
   var R = window.WinterfairReken;
-  var TELEFOON = '06 57 25 56 74';
+  var CONTACT = 'app Marianne via 06 57 25 56 74';
+  var WHATSAPP = 'https://wa.me/31657255674';
   var MAX_PER_PRODUCT = 50;
   var WEBAPP_URL = (window.WINTERFAIR_CONFIG && window.WINTERFAIR_CONFIG.webappUrl) || '';
 
@@ -217,6 +218,16 @@
     b.appendChild(maak('p', null, 'Je haalt je bestelling op tijdens de Winterfair: zaterdag 12 december, 10.00 – 14.00 uur, Nieuweweg 215 in Veenendaal.'));
     b.appendChild(maak('p', 'betalen', 'Betalen: [BETAALWIJZE]'));
 
+    var wijzigen = maak('p', null, 'Wil je je bestelling wijzigen? ');
+    var app = maak('a', null, 'Stuur Marianne een berichtje');
+    app.href = WHATSAPP + '?text=' + encodeURIComponent('Hoi Marianne, ik wil mijn Winterfair-bestelling ' + antwoord.bestelnummer + ' wijzigen.');
+    app.target = '_blank';
+    app.rel = 'noopener';
+    app.appendChild(maak('span', 'sr-only', ' (opent in nieuw tabblad)'));
+    wijzigen.appendChild(app);
+    wijzigen.appendChild(document.createTextNode(' via WhatsApp en noem je bestelnummer.'));
+    b.appendChild(wijzigen);
+
     el.formulier.hidden = true;
     b.hidden = false;
     b.focus();
@@ -249,11 +260,11 @@
         } else if (antwoord && antwoord.gesloten) {
           toonGesloten();
         } else {
-          toonFout('Je bestelling is niet geplaatst. ' + ((antwoord && antwoord.fout) || 'Onbekende fout.') + ' Lukt het niet? Bel ' + TELEFOON + '.');
+          toonFout('Je bestelling is niet geplaatst. ' + ((antwoord && antwoord.fout) || 'Onbekende fout.') + ' Lukt het niet? Probeer het opnieuw of ' + CONTACT + '.');
         }
       })
       .catch(function () {
-        toonFout('Je bestelling is niet geplaatst: er is geen verbinding met de server. Probeer het opnieuw of bel ' + TELEFOON + '.');
+        toonFout('Je bestelling is niet geplaatst: er is geen verbinding met de server. Probeer het opnieuw of ' + CONTACT + '.');
       })
       .then(function () {
         el.knop.disabled = false;
@@ -289,7 +300,7 @@
       .catch(function (err) {
         console.error(err);
         el.laadstatus.className = 'melding melding--fout';
-        el.laadstatus.textContent = 'De producten konden niet worden geladen. Probeer het later opnieuw of bel ' + TELEFOON + '.';
+        el.laadstatus.textContent = 'De producten konden niet worden geladen. Probeer het later opnieuw of ' + CONTACT + '.';
         var opnieuw = maak('button', 'knop', 'Opnieuw proberen');
         opnieuw.type = 'button';
         opnieuw.addEventListener('click', laadFormulier);
