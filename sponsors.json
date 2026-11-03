@@ -1,0 +1,22 @@
+[
+  {
+    "naam": "Jaap Pijpelink",
+    "afbeelding": "img/sponsors/jaap-pijpelink.jpg",
+    "url": "",
+    "formaat": "breed"
+  },
+  {
+    "naam": "Mantelzorgers Ontsorgd",
+    "afbeelding": "img/sponsors/ontsorgd.jpg",
+    "url": "https://www.ontsorgd.nl",
+    "formaat": "staand",
+    "alt": "Advertentie Mantelzorgers Ontsorgd, Heinita Bakker, mantelzorgmakelaar"
+  },
+  {
+    "naam": "De Rank",
+    "afbeelding": "img/sponsors/de-rank.jpg",
+    "url": "https://www.derankveenendaal.nl",
+    "formaat": "staand",
+    "alt": "Advertentie De Rank, christelijke boek- en cadeauwinkel"
+  }
+]

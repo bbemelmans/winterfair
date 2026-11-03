@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Winterfair · 12 december 2026 · Veenendaal</title>
+<meta name="description" content="Winterfair op zaterdag 12 december 2026, 10.00–14.00 uur, Nieuweweg 215 in Veenendaal. Bestel vooraf en haal op tijdens de fair. De opbrengst gaat naar het werk van Jaap onder geheimgelovigen.">
+<meta property="og:title" content="Winterfair · 12 december 2026">
+<meta property="og:description" content="Bestel vooraf mooie producten en haal ze op tijdens de Winterfair in Veenendaal.">
+<meta property="og:image" content="img/flyer.jpg">
+<meta name="theme-color" content="#DAD6B0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@400;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skiplink" href="#bestellen">Direct naar bestellen</a>
+
+<header class="kop">
+  <div class="kop__binnen">
+    <a class="kop__logo" href="#top" id="top">Winterfair</a>
+    <nav class="kop__nav" aria-label="Op deze pagina">
+      <a href="#bestellen">Bestellen</a>
+      <a href="#sponsors">Sponsors</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <img class="flyer" src="img/flyer.jpg" width="1080" height="1350"
+       alt="Flyer Winterfair, 12 december 2026, 10 tot 14 uur, Nieuweweg 215 Veenendaal. Voor het werk van Jaap onder geheimgelovigen.">
+
+  <section class="info kolom" aria-labelledby="info-titel">
+    <h1 id="info-titel" class="sr-only">Winterfair 12 december 2026</h1>
+    <div class="info__kaarten">
+      <div class="kaart">
+        <h2 class="kaart__label">Wanneer</h2>
+        <p class="kaart__groot">Za 12 december</p>
+        <p class="kaart__klein">10.00 – 14.00 uur</p>
+      </div>
+      <div class="kaart">
+        <h2 class="kaart__label">Waar</h2>
+        <p class="kaart__groot">Nieuweweg 215</p>
+        <a class="kaart__klein" href="https://www.google.com/maps/search/?api=1&amp;query=Nieuweweg+215+Veenendaal" target="_blank" rel="noopener">Veenendaal · route<span class="sr-only"> (Google Maps, opent in nieuw tabblad)</span></a>
+      </div>
+    </div>
+    <p class="info__tekst">Kraampjes met leuks en lekkers, soep en broodjes. De opbrengst gaat naar het werk van Jaap onder geheimgelovigen.</p>
+    <a class="knop" href="#bestellen">Bestel vooraf, haal op de fair</a>
+  </section>
+
+  <section id="bestellen" class="bestellen" aria-labelledby="bestellen-titel">
+    <div class="kolom bestellen__binnen">
+      <h2 id="bestellen-titel" class="sectietitel">Bestel mooie producten</h2>
+      <p>Bestellen kan tot en met 3 december. Je haalt je bestelling op tijdens de Winterfair.</p>
+
+      <div id="laadstatus" class="melding" role="status">Producten laden…</div>
+
+      <form id="bestelformulier" class="formulier" novalidate hidden>
+        <fieldset class="producten">
+          <legend class="sr-only">Kies je producten</legend>
+          <ul id="productlijst" class="producten__lijst"></ul>
+          <div class="producten__totaal">
+            <span>Totaal</span>
+            <output id="totaal" for="productlijst">€ 0,00</output>
+          </div>
+        </fieldset>
+
+        <div class="velden">
+          <label class="veld">Naam
+            <input type="text" name="naam" id="naam" autocomplete="name" required maxlength="100" placeholder="Voor- en achternaam" aria-describedby="naam-fout">
+            <span class="veld__fout" id="naam-fout"></span>
+          </label>
+          <label class="veld">Telefoon of e-mail
+            <input type="text" name="contact" id="contact" required maxlength="100" placeholder="Voor een bevestiging" aria-describedby="contact-fout">
+            <span class="veld__fout" id="contact-fout"></span>
+          </label>
+          <label class="veld">Opmerking <span class="veld__optioneel">(optioneel)</span>
+            <textarea name="opmerking" id="opmerking" rows="3" maxlength="500"></textarea>
+          </label>
+          <div class="honeypot" aria-hidden="true">
+            <label>Laat dit veld leeg
+              <input type="text" name="website" tabindex="-1" autocomplete="off">
+            </label>
+          </div>
+          <p class="betalen">Betalen: [BETAALWIJZE]</p>
+        </div>
+
+        <p id="formulierfout" class="melding melding--fout" role="alert" hidden></p>
+        <button type="submit" class="knop" id="verzendknop">Bestelling plaatsen</button>
+        <p class="privacy">We gebruiken je gegevens alleen voor deze bestelling en verwijderen ze na de Winterfair.</p>
+      </form>
+
+      <div id="gesloten" class="melding melding--groot" hidden>
+        <h3>Bestellen is gesloten</h3>
+        <p>Kom gerust langs op de Winterfair op zaterdag 12 december.</p>
+      </div>
+
+      <div id="bevestiging" class="bevestiging" tabindex="-1" hidden></div>
+    </div>
+  </section>
+
+  <section id="sponsors" class="sponsors kolom" aria-labelledby="sponsors-titel">
+    <h2 id="sponsors-titel" class="sectietitel">Met dank aan onze sponsors</h2>
+    <div id="sponsorlijst" class="sponsors__lijst"></div>
+  </section>
+</main>
+
+<footer class="voet">
+  <div class="kolom">
+    <p class="voet__titel">Winterfair · 12 december 2026</p>
+    <p>Nieuweweg 215, Veenendaal · 10.00 – 14.00 uur</p>
+    <p><a href="tel:+31657255674">Vragen? 06 57 25 56 74</a></p>
+  </div>
+</footer>
+
+<script src="config.js"></script>
+<script src="reken.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
