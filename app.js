@@ -267,7 +267,13 @@
     el.laadstatus.textContent = 'Producten laden…';
     el.laadstatus.hidden = false;
 
+    // Apps Script moet na een stille periode even opstarten; dat kan 20 seconden duren.
+    var traag = setTimeout(function () {
+      el.laadstatus.textContent = 'Even geduld, de producten worden opgehaald. Dit kan tot 20 seconden duren.';
+    }, 4000);
+
     haalProductenOp()
+      .finally(function () { clearTimeout(traag); })
       .then(function (data) {
         if (!data || !data.ok) throw new Error((data && data.fout) || 'Ongeldig antwoord');
         el.laadstatus.hidden = true;
