@@ -366,7 +366,6 @@ function ordenKolommen(sheet, producten) {
 
   var doel = gewensteKolommen(kop, producten.map(function (p) { return p.product; }));
   var huidig = kop.map(kolomSleutel);
-  var nieuweKolommen = [];
 
   for (var i = 0; i < doel.length; i++) {
     var sleutel = kolomSleutel(doel[i]);
@@ -380,7 +379,6 @@ function ordenKolommen(sheet, producten) {
       }
       sheet.getRange(1, i + 1).setValue(veilig(doel[i])).setFontWeight('bold');
       huidig.splice(i, 0, sleutel);
-      nieuweKolommen.push(sleutel);
     } else {
       sheet.moveColumns(sheet.getRange(1, j + 1), i + 1);
       huidig.splice(i, 0, huidig.splice(j, 1)[0]);
@@ -393,11 +391,42 @@ function ordenKolommen(sheet, producten) {
   if (rijen > 0) {
     sheet.getRange(2, k.datum + 1, rijen, 1).setNumberFormat(DATUM_FORMAAT);
     sheet.getRange(2, k.totaal + 1, rijen, 1).setNumberFormat(EURO_FORMAAT);
-    if (nieuweKolommen.indexOf('afgerond') !== -1) {
-      sheet.getRange(2, k.afgerond + 1, rijen, 1)
-        .setDataValidation(SpreadsheetApp.newDataValidation().requireCheckbox().build());
-    }
   }
+  ruimLegeRijenOp(sheet);
+}
+
+// Rijen zonder bestelnummer horen leeg te zijn. Een vroegere versie zette in de hele
+// kolom afgerond vinkjes; daardoor kwamen nieuwe bestellingen helemaal onderaan.
+// Dit schuift bestellingen onder lege rijen omhoog en haalt losse vinkjes weg.
+function ruimLegeRijenOp(sheet) {
+  var k = kopIndex(leesKop(sheet));
+  var n = sheet.getLastRow();
+  if (n < 2 || k.bestelnummer == null || k.afgerond == null) return;
+
+  var nummers = sheet.getRange(2, k.bestelnummer + 1, n - 1, 1).getValues()
+    .map(function (r) { return String(r[0]).trim(); });
+  var laatste = nummers.length - 1;
+  while (laatste >= 0 && !nummers[laatste]) laatste--;
+  var heeftGat = nummers.slice(0, laatste + 1).some(function (x) { return !x; });
+  if (heeftGat) {
+    sheet.getRange(2, 1, n - 1, sheet.getLastColumn()).sort({ column: k.bestelnummer + 1, ascending: true });
+  }
+
+  var aantal = nummers.filter(Boolean).length;
+  if (n - 1 > aantal) {
+    sheet.getRange(2 + aantal, k.afgerond + 1, n - 1 - aantal, 1).clearContent().clearDataValidations();
+  }
+}
+
+// Laatste rij met een bestelnummer (1 als er nog geen bestellingen zijn).
+function laatsteBestelRij(sheet, kolom) {
+  var n = sheet.getLastRow();
+  if (n < 2) return 1;
+  var waarden = sheet.getRange(2, kolom, n - 1, 1).getValues();
+  for (var i = waarden.length - 1; i >= 0; i--) {
+    if (String(waarden[i][0]).trim() !== '') return i + 2;
+  }
+  return 1;
 }
 
 function schrijfBestelling(b, producten) {
@@ -417,7 +446,8 @@ function schrijfBestelling(b, producten) {
   rij[k.totaal] = b.totaal / 100;
   b.regels.forEach(function (r) { rij[kop.indexOf(r.product)] = r.aantal; });
 
-  var rijNummer = sheet.getLastRow() + 1;
+  var rijNummer = laatsteBestelRij(sheet, k.bestelnummer + 1) + 1;
+  if (rijNummer > sheet.getMaxRows()) sheet.insertRowsAfter(sheet.getMaxRows(), 1);
   sheet.getRange(rijNummer, 1, 1, rij.length).setValues([rij]);
   sheet.getRange(rijNummer, k.datum + 1).setNumberFormat(DATUM_FORMAAT);
   sheet.getRange(rijNummer, k.totaal + 1).setNumberFormat(EURO_FORMAAT);

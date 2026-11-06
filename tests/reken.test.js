@@ -132,10 +132,25 @@ function nepTabblad(rijen, maxKolommen = 30, maxRijen = 20) {
         getValues: () => grid.slice(r - 1, r - 1 + nr).map(rij => rij.slice(c - 1, c - 1 + nc)),
         setValue: v => { grid[r - 1][c - 1] = v; return bereik; },
         setValues: w => { w.forEach((rij, i) => rij.forEach((v, j) => { grid[r - 1 + i][c - 1 + j] = v; })); return bereik; },
-        setFontWeight: () => bereik, setNumberFormat: () => bereik, setDataValidation: () => bereik
+        setFontWeight: () => bereik, setNumberFormat: () => bereik, setDataValidation: () => bereik,
+        clearDataValidations: () => bereik,
+        clearContent: () => { for (let i = 0; i < nr; i++) for (let j = 0; j < nc; j++) grid[r - 1 + i][c - 1 + j] = ''; return bereik; },
+        // Zoals Sheets: oplopend, lege cellen onderaan, verder volgorde behouden.
+        sort: ({ column, ascending }) => {
+          const blok = grid.slice(r - 1, r - 1 + nr);
+          const sleutel = rij => rij[column - 1];
+          blok.sort((a, b) => {
+            const la = leeg(sleutel(a)), lb = leeg(sleutel(b));
+            if (la || lb) return la - lb;
+            return (sleutel(a) > sleutel(b) ? 1 : sleutel(a) < sleutel(b) ? -1 : 0) * (ascending ? 1 : -1);
+          });
+          blok.forEach((rij, i) => { grid[r - 1 + i] = rij; });
+          return bereik;
+        }
       };
       return bereik;
     },
+    insertRowsAfter: (n, aantal) => grid.splice(n, 0, ...Array.from({ length: aantal }, () => Array(grid[0].length).fill(''))),
     insertColumnBefore: n => grid.forEach(rij => rij.splice(n - 1, 0, '')),
     insertColumnAfter: n => grid.forEach(rij => rij.splice(n, 0, '')),
     moveColumns: (bereik, doel) => grid.forEach(rij => {
@@ -193,6 +208,23 @@ test('tweede keer ordenen verandert niets', () => {
   const eerste = JSON.stringify(sheet.grid);
   gs.ordenKolommen(sheet, prod(['A', 'B']));
   assert.strictEqual(JSON.stringify(sheet.grid), eerste);
+});
+test('losse vinkjes in lege rijen: bestellingen schuiven omhoog, nieuwe komt eronder', () => {
+  const kop = ['datum', 'bestelnummer', 'naam', 'telefoonnummer', 'opmerking', 'regels', 'Rookworst', 'Advocaat, groot', 'totaal', 'afgerond', 'Opmerkingen Marianne'];
+  const leegMetVinkje = ['', '', '', '', '', '', '', '', '', false, ''];
+  const rijen = [kop];
+  for (let i = 0; i < 15; i++) rijen.push(leegMetVinkje.slice());
+  rijen.push(['d', 'WF-0001', 'An', '0611111111', '', '1× Rookworst', 1, '', 3.5, true, 'betaald']);
+  rijen.push(['d', 'WF-0002', 'TEST', '0600000000', '', '1× Rookworst', 1, '', 3.5, false, '']);
+  const sheet = nepTabblad(rijen, 30, 18);
+  gs.tabblad = () => sheet;
+  const b = gs.valideerEnBereken(producten, {}, { naam: 'Cas', telefoon: '0633333333', items: [{ product: 'Rookworst', aantal: 1 }] });
+  const nummer = gs.schrijfBestelling(b, [{ product: 'Rookworst' }, { product: 'Advocaat, groot' }]);
+  assert.strictEqual(nummer, 'WF-0003');
+  assert.deepStrictEqual([1, 2, 3].map(r => rijVan(sheet, r).bestelnummer), ['WF-0001', 'WF-0002', 'WF-0003']);
+  assert.strictEqual(rijVan(sheet, 1)['Opmerkingen Marianne'], 'betaald');
+  assert.strictEqual(rijVan(sheet, 1).afgerond, true);
+  assert.strictEqual(sheet.getLastRow(), 4);
 });
 test('nieuwe bestelling komt in de juiste kolommen', () => {
   const sheet = nepTabblad([['tijdstip', 'bestelnummer', 'naam', 'contact', 'opmerking', 'regels', 'totaal', 'Rookworst', 'Advocaat']]);
