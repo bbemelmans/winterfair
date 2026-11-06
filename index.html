@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@400;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=8">
+<link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
 <a class="skiplink" href="#bestellen">Direct naar bestellen</a>
@@ -71,9 +71,9 @@
             <input type="text" name="naam" id="naam" autocomplete="name" required maxlength="100" placeholder="Voor- en achternaam" aria-describedby="naam-fout">
             <span class="veld__fout" id="naam-fout"></span>
           </label>
-          <label class="veld">Telefoon of e-mail
-            <input type="text" name="contact" id="contact" required maxlength="100" placeholder="Zodat we je kunnen bereiken" aria-describedby="contact-fout">
-            <span class="veld__fout" id="contact-fout"></span>
+          <label class="veld">Telefoonnummer
+            <input type="tel" name="telefoon" id="telefoon" required maxlength="30" autocomplete="tel" inputmode="tel" placeholder="Zodat we je kunnen bereiken" aria-describedby="telefoon-fout">
+            <span class="veld__fout" id="telefoon-fout"></span>
           </label>
           <label class="veld">Opmerking <span class="veld__optioneel">(optioneel)</span>
             <textarea name="opmerking" id="opmerking" rows="3" maxlength="500"></textarea>
@@ -121,8 +121,8 @@
   </div>
 </footer>
 
-<script src="config.js?v=8"></script>
-<script src="reken.js?v=8"></script>
-<script src="app.js?v=8"></script>
+<script src="config.js?v=9"></script>
+<script src="reken.js?v=9"></script>
+<script src="app.js?v=9"></script>
 </body>
 </html>

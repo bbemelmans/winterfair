@@ -132,14 +132,25 @@ Gebruik alleen eigen foto's, of foto's waarvan je zeker weet dat je ze mag gebru
 
 ## Bestellingen bekijken
 
-Elke bestelling is één rij in **Bestellingen**:
+Elke bestelling is één rij in **Bestellingen**, met deze kolommen van links naar rechts:
 
-- tijdstip, bestelnummer (WF-0001, WF-0002, …), naam, contact, opmerking;
-- een leesbare regel, zoals `2× Erwtensoep, 1 liter; 3× Rookworst`;
-- het totaal;
-- per product een kolom met het aantal.
+| Kolom | Inhoud |
+| --- | --- |
+| `datum` | Datum van de bestelling. |
+| `bestelnummer` | WF-0001, WF-0002, … |
+| `naam`, `telefoonnummer` | Zoals ingevuld door de besteller. |
+| `opmerking` | Opmerking van de besteller (optioneel). |
+| `regels` | Leesbaar overzicht, zoals `2× Erwtensoep, 1 liter; 3× Rookworst`. |
+| één kolom per product | Het aantal, in dezelfde volgorde als tabblad **Producten**. |
+| `totaal` | Totaalbedrag, door het script uitgerekend. |
+| `afgerond` | Vinkje voor Marianne als de bestelling is afgehandeld. |
+| `Opmerkingen Marianne` | Vrij veld voor wie de bestelling afhandelt, bijv. "betaald" of "belt nog terug". |
 
-De productkolommen staan altijd in dezelfde volgorde als tabblad **Producten** (kolom `volgorde`). Pas je daar de volgorde aan of voeg je een product toe, dan schuiven de kolommen in Bestellingen vanzelf mee, inclusief de aantallen. Gebeurt dat een keer niet, kies dan **Winterfair → Kolommen van Bestellingen ordenen**. Zet daarom geen eigen formules of extra kolommen achter de productkolommen; maak voor overzichten liever een apart tabblad.
+De kolommen `afgerond` en `Opmerkingen Marianne` vult het script nooit in; die zijn voor Marianne.
+
+De productkolommen volgen altijd tabblad **Producten** (kolom `volgorde`). Pas je daar de volgorde aan of voeg je een product toe, dan schuiven de kolommen in Bestellingen vanzelf mee. Hele kolommen schuiven, dus aantallen, vinkjes en opmerkingen blijven bij de juiste bestelling. Gebeurt dat een keer niet, kies dan **Winterfair → Kolommen van Bestellingen ordenen**. Voeg zelf geen kolommen toe in Bestellingen; maak voor overzichten liever een apart tabblad.
+
+Alleen de nog niet afgeronde bestellingen zien? Klik op **Gegevens → Filterweergaven → Nieuwe filterweergave** en filter de kolom `afgerond` op "ONWAAR". Anderen die de Sheet tegelijk open hebben, merken niets van jouw filter.
 
 Voor de afhaallijst: sorteer op naam en print. Wil je weten hoeveel je van een product nodig hebt? Klik op de kolomletter van dat product; Sheets toont de som rechtsonder.
 
@@ -172,7 +183,7 @@ Nog in te vullen: de link van **Jaap Pijpelink**. Zet die bij `"url"` in `sponso
 Op de pagina beloven we: *"We gebruiken je gegevens alleen voor deze bestelling en verwijderen ze na de Winterfair."*
 
 1. Open de Sheet en kies **Winterfair → Persoonsgegevens verwijderen (na de fair)**. Bevestig met **Ja**.
-2. Naam, contact en opmerking zijn nu bij alle bestellingen leeg. Bestelnummers, aantallen en totalen blijven staan, zodat je de opbrengst nog kunt zien.
+2. Naam, telefoonnummer, opmerking en Opmerkingen Marianne zijn nu bij alle bestellingen leeg. Bestelnummers, aantallen en totalen blijven staan, zodat je de opbrengst nog kunt zien.
 3. Google bewaart oude versies in **Bestand → Versiegeschiedenis**, en daarin staan de gegevens nog. Wil je ze echt helemaal kwijt?
    - Maak via **Bestand → Kopie maken** een kopie. Een kopie heeft geen oude versies.
    - Verwijder de oorspronkelijke Sheet en leeg de prullenbak van Google Drive.

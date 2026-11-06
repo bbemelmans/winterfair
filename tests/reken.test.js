@@ -74,12 +74,20 @@ test('voorraad: 5 max, 3 verkocht → 3 bestellen geweigerd, 2 mag', () => {
   assert.strictEqual(fout([{ product: 'Twixkoek', aantal: 2 }], {}, { Twixkoek: 3 }), undefined);
   assert.match(fout([{ product: 'Twixkoek', aantal: 1 }], {}, { Twixkoek: 5 }), /uitverkocht/);
 });
-test('naam en contact verplicht', () => {
-  assert.ok(fout([{ product: 'Rookworst', aantal: 1 }], { naam: '  ' }));
-  assert.ok(fout([{ product: 'Rookworst', aantal: 1 }], { contact: 'abc' }));
-  assert.ok(fout([{ product: 'Rookworst', aantal: 1 }], { contact: '0612' }));
-  assert.strictEqual(fout([{ product: 'Rookworst', aantal: 1 }], { contact: 'iemand@voorbeeld.nl' }), undefined);
-  assert.strictEqual(fout([{ product: 'Rookworst', aantal: 1 }], { contact: '+31 6 1234 5678' }), undefined);
+test('naam en telefoonnummer verplicht, e-mail telt niet', () => {
+  const rw = [{ product: 'Rookworst', aantal: 1 }];
+  assert.ok(fout(rw, { naam: '  ' }));
+  assert.ok(fout(rw, { telefoon: 'abc' }));
+  assert.ok(fout(rw, { telefoon: '0612' }));
+  assert.ok(fout(rw, { telefoon: 'iemand@voorbeeld.nl' }));
+  assert.strictEqual(fout(rw, { telefoon: '+31 6 1234 5678' }), undefined);
+  assert.strictEqual(fout(rw, { telefoon: '06-12345678' }), undefined);
+  assert.strictEqual(R.telefoonGeldig('06 12345678'), true);
+  assert.strictEqual(R.telefoonGeldig('iemand@voorbeeld.nl'), false);
+});
+test('oud formulier stuurt "contact": wordt als telefoonnummer gebruikt', () => {
+  const s = gs.valideerEnBereken(producten, {}, { naam: 'A', contact: '0612345678', items: [{ product: 'Rookworst', aantal: 1 }] });
+  assert.strictEqual(s.telefoon, '0612345678');
 });
 
 console.log('Hulpfuncties');
@@ -105,28 +113,99 @@ test('bedragen netjes in euro', () => {
   assert.strictEqual(R.formatEuro(123456), '€ 1.234,56');
 });
 
-console.log('Kolommen van Bestellingen');
-// vm-arrays komen uit een andere context; via JSON vergelijken.
-const orden = (blok, namen) => JSON.parse(JSON.stringify(gs.herordenProductBlok(blok, namen)));
-test('kolommen volgen de volgorde van Producten, aantallen schuiven mee', () => {
-  const blok = [['Erwtensoep', 'Rookworst', 'Advocaat'], [2, '', 1], ['', 4, '']];
-  assert.deepStrictEqual(orden(blok, ['Advocaat', 'Erwtensoep', 'Rookworst']),
-    [['Advocaat', 'Erwtensoep', 'Rookworst'], [1, 2, ''], ['', '', 4]]);
+console.log('Kolommen van Bestellingen (nagebootst tabblad)');
+
+// Minimale nabootsing van een Google Sheets-tabblad: genoeg voor ordenKolommen en schrijfBestelling.
+function nepTabblad(rijen, maxKolommen = 30, maxRijen = 20) {
+  const grid = Array.from({ length: maxRijen }, (_, r) =>
+    Array.from({ length: maxKolommen }, (_, c) => (rijen[r] && rijen[r][c] !== undefined ? rijen[r][c] : '')));
+  const leeg = v => v === '' || v == null;
+  const sheet = {
+    grid,
+    getMaxRows: () => grid.length,
+    getMaxColumns: () => grid[0].length,
+    getLastColumn: () => { let m = 0; grid.forEach(rij => rij.forEach((v, c) => { if (!leeg(v)) m = Math.max(m, c + 1); })); return m; },
+    getLastRow: () => { let m = 0; grid.forEach((rij, r) => { if (rij.some(v => !leeg(v))) m = r + 1; }); return m; },
+    getRange: (r, c, nr = 1, nc = 1) => {
+      const bereik = {
+        col: c,
+        getValues: () => grid.slice(r - 1, r - 1 + nr).map(rij => rij.slice(c - 1, c - 1 + nc)),
+        setValue: v => { grid[r - 1][c - 1] = v; return bereik; },
+        setValues: w => { w.forEach((rij, i) => rij.forEach((v, j) => { grid[r - 1 + i][c - 1 + j] = v; })); return bereik; },
+        setFontWeight: () => bereik, setNumberFormat: () => bereik, setDataValidation: () => bereik
+      };
+      return bereik;
+    },
+    insertColumnBefore: n => grid.forEach(rij => rij.splice(n - 1, 0, '')),
+    insertColumnAfter: n => grid.forEach(rij => rij.splice(n, 0, '')),
+    moveColumns: (bereik, doel) => grid.forEach(rij => {
+      const [v] = rij.splice(bereik.col - 1, 1);
+      rij.splice(doel > bereik.col ? doel - 2 : doel - 1, 0, v);
+    })
+  };
+  return sheet;
+}
+gs.SpreadsheetApp = { newDataValidation: () => ({ requireCheckbox() { return this; }, build: () => ({}) }) };
+const kopVan = sheet => sheet.grid[0].slice(0, sheet.getLastColumn());
+const rijVan = (sheet, r) => { const k = kopVan(sheet); const o = {}; k.forEach((h, c) => { if (sheet.grid[r][c] !== '') o[h] = sheet.grid[r][c]; }); return o; };
+const prod = namen => namen.map(product => ({ product }));
+
+test('oud tabblad wordt omgezet: datum, telefoonnummer, producten, totaal, afgerond, Opmerkingen Marianne', () => {
+  const sheet = nepTabblad([
+    ['tijdstip', 'bestelnummer', 'naam', 'contact', 'opmerking', 'regels', 'totaal', 'Erwtensoep', 'Rookworst', 'Advocaat'],
+    ['d1', 'WF-0001', 'An', '0611111111', '', '2× Erwtensoep', 15.9, 2, '', ''],
+    ['d2', 'WF-0002', 'Bo', '0622222222', 'graag vroeg', '1× Advocaat; 4× Rookworst', 23.75, '', 4, 1]
+  ]);
+  gs.ordenKolommen(sheet, prod(['Advocaat', 'Erwtensoep', 'Rookworst']));
+  assert.deepStrictEqual(kopVan(sheet), ['datum', 'bestelnummer', 'naam', 'telefoonnummer', 'opmerking', 'regels',
+    'Advocaat', 'Erwtensoep', 'Rookworst', 'totaal', 'afgerond', 'Opmerkingen Marianne']);
+  assert.deepStrictEqual(rijVan(sheet, 1), { datum: 'd1', bestelnummer: 'WF-0001', naam: 'An', telefoonnummer: '0611111111',
+    regels: '2× Erwtensoep', Erwtensoep: 2, totaal: 15.9 });
+  assert.deepStrictEqual(rijVan(sheet, 2), { datum: 'd2', bestelnummer: 'WF-0002', naam: 'Bo', telefoonnummer: '0622222222',
+    opmerking: 'graag vroeg', regels: '1× Advocaat; 4× Rookworst', Advocaat: 1, Rookworst: 4, totaal: 23.75 });
 });
-test('volgorde klopt al → niets doen', () => {
-  assert.strictEqual(gs.herordenProductBlok([['A', 'B'], [1, 2]], ['A', 'B']), null);
+test('nieuw product en andere volgorde: opmerkingen van Marianne blijven bij de juiste bestelling', () => {
+  const sheet = nepTabblad([
+    ['datum', 'bestelnummer', 'naam', 'telefoonnummer', 'opmerking', 'regels', 'Advocaat', 'Rookworst', 'totaal', 'afgerond', 'Opmerkingen Marianne'],
+    ['d1', 'WF-0001', 'An', '0611111111', '', '1× Advocaat', 1, '', 9.25, true, 'betaald'],
+    ['d2', 'WF-0002', 'Bo', '0622222222', '', '3× Rookworst', '', 3, 10.5, '', 'belt nog']
+  ]);
+  gs.ordenKolommen(sheet, prod(['Rookworst', 'Groenstuk', 'Advocaat']));
+  assert.deepStrictEqual(kopVan(sheet).slice(6), ['Rookworst', 'Groenstuk', 'Advocaat', 'totaal', 'afgerond', 'Opmerkingen Marianne']);
+  assert.strictEqual(rijVan(sheet, 1)['Opmerkingen Marianne'], 'betaald');
+  assert.strictEqual(rijVan(sheet, 1).afgerond, true);
+  assert.strictEqual(rijVan(sheet, 1).Advocaat, 1);
+  assert.strictEqual(rijVan(sheet, 2)['Opmerkingen Marianne'], 'belt nog');
+  assert.strictEqual(rijVan(sheet, 2).Rookworst, 3);
 });
-test('nieuw product krijgt een lege kolom op zijn plek', () => {
-  assert.deepStrictEqual(orden([['A', 'B'], [1, 2]], ['A', 'Nieuw', 'B']), [['A', 'Nieuw', 'B'], [1, '', 2]]);
+test('verwijderd product: kolom blijft bewaard vóór totaal', () => {
+  const sheet = nepTabblad([
+    ['datum', 'bestelnummer', 'naam', 'telefoonnummer', 'opmerking', 'regels', 'Oud', 'A', 'totaal', 'afgerond', 'Opmerkingen Marianne'],
+    ['d1', 'WF-0001', 'An', '0611111111', '', '', 3, 1, 5, '', '']
+  ]);
+  gs.ordenKolommen(sheet, prod(['A']));
+  assert.deepStrictEqual(kopVan(sheet).slice(6), ['A', 'Oud', 'totaal', 'afgerond', 'Opmerkingen Marianne']);
+  assert.deepStrictEqual([rijVan(sheet, 1).A, rijVan(sheet, 1).Oud], [1, 3]);
 });
-test('kolom van verwijderd product blijft achteraan bewaard', () => {
-  assert.deepStrictEqual(orden([['Oud', 'A'], [3, 1]], ['A']), [['A', 'Oud'], [1, 3]]);
+test('tweede keer ordenen verandert niets', () => {
+  const sheet = nepTabblad([['tijdstip', 'bestelnummer', 'naam', 'contact', 'opmerking', 'regels', 'totaal', 'B', 'A']]);
+  gs.ordenKolommen(sheet, prod(['A', 'B']));
+  const eerste = JSON.stringify(sheet.grid);
+  gs.ordenKolommen(sheet, prod(['A', 'B']));
+  assert.strictEqual(JSON.stringify(sheet.grid), eerste);
 });
-test('lege kolom zonder kop verdwijnt, met gegevens blijft hij', () => {
-  assert.deepStrictEqual(orden([['A', '', ''], [1, '', 7]], ['A']), [['A', ''], [1, 7]]);
-});
-test('nog geen productkolommen → alle producten erbij', () => {
-  assert.deepStrictEqual(orden([[], []], ['A', 'B']), [['A', 'B'], ['', '']]);
+test('nieuwe bestelling komt in de juiste kolommen', () => {
+  const sheet = nepTabblad([['tijdstip', 'bestelnummer', 'naam', 'contact', 'opmerking', 'regels', 'totaal', 'Rookworst', 'Advocaat']]);
+  gs.tabblad = () => sheet;
+  const b = gs.valideerEnBereken(producten, {}, { naam: 'Cas', telefoon: '0633333333', items: [{ product: 'Rookworst', aantal: 4 }] });
+  const nummer = gs.schrijfBestelling(b, producten);
+  assert.strictEqual(nummer, 'WF-0001');
+  const rij = rijVan(sheet, 1);
+  assert.strictEqual(rij.telefoonnummer, '0633333333');
+  assert.strictEqual(rij.Rookworst, 4);
+  assert.strictEqual(rij.totaal, 13.5);
+  assert.strictEqual(Object.prototype.toString.call(rij.datum), '[object Date]');
+  assert.deepStrictEqual(kopVan(sheet).slice(-3), ['totaal', 'afgerond', 'Opmerkingen Marianne']);
 });
 
 console.log(`\nAlle ${geslaagd} tests geslaagd.`);

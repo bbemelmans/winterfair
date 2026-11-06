@@ -32,7 +32,7 @@
     gesloten: document.getElementById('gesloten'),
     bevestiging: document.getElementById('bevestiging'),
     naam: document.getElementById('naam'),
-    contact: document.getElementById('contact'),
+    telefoon: document.getElementById('telefoon'),
     opmerking: document.getElementById('opmerking'),
     sponsors: document.getElementById('sponsorlijst')
   };
@@ -216,9 +216,9 @@
     zetVeldfout(el.naam, naamOk ? '' : 'Vul je naam in.');
     if (!naamOk) eerste = eerste || el.naam;
 
-    var contactOk = R.contactGeldig(el.contact.value);
-    zetVeldfout(el.contact, contactOk ? '' : 'Vul een telefoonnummer (10 cijfers) of e-mailadres in.');
-    if (!contactOk) eerste = eerste || el.contact;
+    var telefoonOk = R.telefoonGeldig(el.telefoon.value);
+    zetVeldfout(el.telefoon, telefoonOk ? '' : 'Vul je telefoonnummer in (10 cijfers).');
+    if (!telefoonOk) eerste = eerste || el.telefoon;
 
     var heeftProducten = R.bereken(producten, aantallen).regels.length > 0;
     if (!heeftProducten) {
@@ -291,7 +291,8 @@
 
     var bestelling = {
       naam: el.naam.value.trim(),
-      contact: el.contact.value.trim(),
+      telefoon: el.telefoon.value.trim(),
+      contact: el.telefoon.value.trim(), // voor het script van vóór november; kan later weg
       opmerking: el.opmerking.value.trim(),
       website: el.formulier.elements.website.value,
       items: items

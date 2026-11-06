@@ -41,18 +41,18 @@
     return (negatief ? '− ' : '') + '€ ' + euro + ',' + centen;
   }
 
-  // Telefoonnummer (minstens 10 cijfers) of e-mailadres.
-  function contactGeldig(waarde) {
+  // 10 tot 15 cijfers; spaties, +, -, haakjes en punten mogen.
+  function telefoonGeldig(waarde) {
     var v = String(waarde || '').trim();
-    if (v.indexOf('@') !== -1) return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-    return (v.match(/\d/g) || []).length >= 10 && /^[\d\s()+\-.]+$/.test(v);
+    var cijfers = (v.match(/\d/g) || []).length;
+    return /^[\d\s()+\-.]+$/.test(v) && cijfers >= 10 && cijfers <= 15;
   }
 
   var api = {
     regelBedrag: regelBedrag,
     bereken: bereken,
     formatEuro: formatEuro,
-    contactGeldig: contactGeldig
+    telefoonGeldig: telefoonGeldig
   };
   root.WinterfairReken = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
