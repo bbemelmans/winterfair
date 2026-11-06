@@ -23,12 +23,13 @@ var PRODUCT_KOLOMMEN = ['volgorde', 'product', 'prijs', 'actie_aantal', 'actie_p
 
 // Indeling van tabblad Bestellingen: deze kolommen vooraan, dan één kolom per product
 // (in de volgorde van tabblad Producten), dan deze kolommen achteraan.
-var KOLOMMEN_VOOR = ['datum', 'bestelnummer', 'naam', 'telefoonnummer', 'opmerking', 'regels'];
+var KOLOMMEN_VOOR = ['bestelnummer', 'naam', 'telefoonnummer', 'opmerking'];
 var KOLOMMEN_NA = ['totaal', 'afgerond', 'Opmerkingen Marianne'];
 // Kolomnamen uit eerdere versies; die worden vanzelf hernoemd.
-var OUDE_KOPPEN = { tijdstip: 'datum', contact: 'telefoonnummer' };
+var OUDE_KOPPEN = { contact: 'telefoonnummer' };
+// Kolommen uit eerdere versies die niet meer nodig zijn; die worden verwijderd.
+var VERVALLEN_KOLOMMEN = ['tijdstip', 'datum', 'regels'];
 
-var DATUM_FORMAAT = 'dd-mm-yyyy';
 var EURO_FORMAAT = '"€" #,##0.00';
 var MAX_PER_PRODUCT = 50;
 
@@ -235,14 +236,11 @@ function veilig(tekst) {
   return /^[=+\-@]/.test(tekst) ? "'" + tekst : tekst;
 }
 
-function regelsAlsTekst(regels) {
-  return regels.map(function (r) { return r.aantal + '× ' + r.product; }).join('; ');
-}
 
 // Vaste kolommen herkennen we hoofdletterongevoelig, productkolommen precies.
 function isVasteKolom(naam) {
   var laag = String(naam).trim().toLowerCase();
-  return KOLOMMEN_VOOR.concat(KOLOMMEN_NA).some(function (k) { return k.toLowerCase() === laag; }) ||
+  return KOLOMMEN_VOOR.concat(KOLOMMEN_NA, VERVALLEN_KOLOMMEN).some(function (k) { return k.toLowerCase() === laag; }) ||
     OUDE_KOPPEN.hasOwnProperty(laag);
 }
 
@@ -355,6 +353,14 @@ function ordenKolommen(sheet, producten) {
   producten = producten || leesProducten();
   var kop = leesKop(sheet);
 
+  // Kolommen die niet meer nodig zijn verwijderen (van rechts naar links).
+  for (var v = kop.length - 1; v >= 0; v--) {
+    if (VERVALLEN_KOLOMMEN.indexOf(kop[v].toLowerCase()) !== -1) {
+      sheet.deleteColumn(v + 1);
+      kop.splice(v, 1);
+    }
+  }
+
   // Oude kolomnamen hernoemen (alleen als de nieuwe naam nog niet bestaat).
   kop.forEach(function (h, i) {
     var nieuw = OUDE_KOPPEN[h.toLowerCase()];
@@ -389,7 +395,6 @@ function ordenKolommen(sheet, producten) {
   var k = kopIndex(leesKop(sheet));
   var rijen = sheet.getMaxRows() - 1;
   if (rijen > 0) {
-    sheet.getRange(2, k.datum + 1, rijen, 1).setNumberFormat(DATUM_FORMAAT);
     sheet.getRange(2, k.totaal + 1, rijen, 1).setNumberFormat(EURO_FORMAAT);
   }
   ruimLegeRijenOp(sheet);
@@ -437,19 +442,16 @@ function schrijfBestelling(b, producten) {
   var k = kopIndex(kop);
   var bestelnummer = volgendBestelnummer(sheet, k.bestelnummer + 1);
   var rij = kop.map(function () { return ''; });
-  rij[k.datum] = new Date();
   rij[k.bestelnummer] = bestelnummer;
   rij[k.naam] = veilig(b.naam);
   rij[k.telefoonnummer] = veilig(b.telefoon);
   rij[k.opmerking] = veilig(b.opmerking);
-  rij[k.regels] = regelsAlsTekst(b.regels);
   rij[k.totaal] = b.totaal / 100;
   b.regels.forEach(function (r) { rij[kop.indexOf(r.product)] = r.aantal; });
 
   var rijNummer = laatsteBestelRij(sheet, k.bestelnummer + 1) + 1;
   if (rijNummer > sheet.getMaxRows()) sheet.insertRowsAfter(sheet.getMaxRows(), 1);
   sheet.getRange(rijNummer, 1, 1, rij.length).setValues([rij]);
-  sheet.getRange(rijNummer, k.datum + 1).setNumberFormat(DATUM_FORMAAT);
   sheet.getRange(rijNummer, k.totaal + 1).setNumberFormat(EURO_FORMAAT);
   sheet.getRange(rijNummer, k.afgerond + 1)
     .setDataValidation(SpreadsheetApp.newDataValidation().requireCheckbox().build());

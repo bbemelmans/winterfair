@@ -136,11 +136,9 @@ Elke bestelling is één rij in **Bestellingen**, met deze kolommen van links na
 
 | Kolom | Inhoud |
 | --- | --- |
-| `datum` | Datum van de bestelling. |
-| `bestelnummer` | WF-0001, WF-0002, … |
+| `bestelnummer` | WF-0001, WF-0002, … (oplopend, dus ook de volgorde van binnenkomst). |
 | `naam`, `telefoonnummer` | Zoals ingevuld door de besteller. |
 | `opmerking` | Opmerking van de besteller (optioneel). |
-| `regels` | Leesbaar overzicht, zoals `2× Erwtensoep, 1 liter; 3× Rookworst`. |
 | één kolom per product | Het aantal, in dezelfde volgorde als tabblad **Producten**. |
 | `totaal` | Totaalbedrag, door het script uitgerekend. |
 | `afgerond` | Vinkje voor Marianne als de bestelling is afgehandeld. |
