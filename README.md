@@ -139,6 +139,8 @@ Elke bestelling is één rij in **Bestellingen**:
 - het totaal;
 - per product een kolom met het aantal.
 
+De productkolommen staan altijd in dezelfde volgorde als tabblad **Producten** (kolom `volgorde`). Pas je daar de volgorde aan of voeg je een product toe, dan schuiven de kolommen in Bestellingen vanzelf mee, inclusief de aantallen. Gebeurt dat een keer niet, kies dan **Winterfair → Kolommen van Bestellingen ordenen**. Zet daarom geen eigen formules of extra kolommen achter de productkolommen; maak voor overzichten liever een apart tabblad.
+
 Voor de afhaallijst: sorteer op naam en print. Wil je weten hoeveel je van een product nodig hebt? Klik op de kolomletter van dat product; Sheets toont de som rechtsonder.
 
 Het script rekent prijzen en totaal zelf uit met de prijzen in de Sheet. Wat de browser stuurt aan bedragen, wordt niet gebruikt.

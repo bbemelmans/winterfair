@@ -105,4 +105,28 @@ test('bedragen netjes in euro', () => {
   assert.strictEqual(R.formatEuro(123456), '€ 1.234,56');
 });
 
+console.log('Kolommen van Bestellingen');
+// vm-arrays komen uit een andere context; via JSON vergelijken.
+const orden = (blok, namen) => JSON.parse(JSON.stringify(gs.herordenProductBlok(blok, namen)));
+test('kolommen volgen de volgorde van Producten, aantallen schuiven mee', () => {
+  const blok = [['Erwtensoep', 'Rookworst', 'Advocaat'], [2, '', 1], ['', 4, '']];
+  assert.deepStrictEqual(orden(blok, ['Advocaat', 'Erwtensoep', 'Rookworst']),
+    [['Advocaat', 'Erwtensoep', 'Rookworst'], [1, 2, ''], ['', '', 4]]);
+});
+test('volgorde klopt al → niets doen', () => {
+  assert.strictEqual(gs.herordenProductBlok([['A', 'B'], [1, 2]], ['A', 'B']), null);
+});
+test('nieuw product krijgt een lege kolom op zijn plek', () => {
+  assert.deepStrictEqual(orden([['A', 'B'], [1, 2]], ['A', 'Nieuw', 'B']), [['A', 'Nieuw', 'B'], [1, '', 2]]);
+});
+test('kolom van verwijderd product blijft achteraan bewaard', () => {
+  assert.deepStrictEqual(orden([['Oud', 'A'], [3, 1]], ['A']), [['A', 'Oud'], [1, 3]]);
+});
+test('lege kolom zonder kop verdwijnt, met gegevens blijft hij', () => {
+  assert.deepStrictEqual(orden([['A', '', ''], [1, '', 7]], ['A']), [['A', ''], [1, 7]]);
+});
+test('nog geen productkolommen → alle producten erbij', () => {
+  assert.deepStrictEqual(orden([[], []], ['A', 'B']), [['A', 'B'], ['', '']]);
+});
+
 console.log(`\nAlle ${geslaagd} tests geslaagd.`);

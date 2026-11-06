@@ -88,10 +88,11 @@ function doPost(e) {
     if (!isOpen(leesSluitdatum(), new Date())) {
       return json({ ok: false, gesloten: true, fout: 'Bestellen is gesloten.' });
     }
-    var bestelling = valideerEnBereken(leesProducten(), leesVerkocht(), invoer);
+    var producten = leesProducten();
+    var bestelling = valideerEnBereken(producten, leesVerkocht(), invoer);
     if (bestelling.fout) return json({ ok: false, fout: bestelling.fout });
 
-    var bestelnummer = schrijfBestelling(bestelling);
+    var bestelnummer = schrijfBestelling(bestelling, producten);
     SpreadsheetApp.flush();
     return json({
       ok: true,
@@ -227,6 +228,41 @@ function regelsAlsTekst(regels) {
   return regels.map(function (r) { return r.aantal + '× ' + r.product; }).join('; ');
 }
 
+// blok: de productkolommen van Bestellingen (rij 0 = kopregel).
+// Geeft het blok terug met de kolommen in de volgorde van productNamen,
+// of null als de volgorde al klopt. Producten zonder kolom krijgen een lege kolom;
+// kolommen van producten die niet meer in Producten staan, schuiven naar achteren.
+function herordenProductBlok(blok, productNamen) {
+  var oudeKop = blok[0].map(function (h) { return String(h).trim(); });
+  var gebruikt = {};
+  var volgorde = [];
+  productNamen.forEach(function (naam) {
+    if (volgorde.some(function (v) { return v.naam === naam; })) return;
+    var index = -1;
+    for (var j = 0; j < oudeKop.length; j++) {
+      if (oudeKop[j] === naam && !gebruikt[j]) { index = j; break; }
+    }
+    if (index !== -1) gebruikt[index] = true;
+    volgorde.push({ naam: naam, index: index });
+  });
+  oudeKop.forEach(function (naam, j) {
+    if (gebruikt[j]) return;
+    var heeftData = blok.some(function (rij, r) { return r > 0 && rij[j] !== '' && rij[j] != null; });
+    if (naam || heeftData) volgorde.push({ naam: naam, index: j });
+  });
+
+  var ongewijzigd = volgorde.length === oudeKop.length &&
+    volgorde.every(function (v, j) { return v.index === j; });
+  if (ongewijzigd) return null;
+
+  return blok.map(function (rij, r) {
+    return volgorde.map(function (v) {
+      if (r === 0) return v.naam;
+      return v.index === -1 ? '' : rij[v.index];
+    });
+  });
+}
+
 
 /* ---------- Sheet lezen en schrijven ---------- */
 
@@ -309,17 +345,47 @@ function volgendBestelnummer(sheet, kolom) {
   return 'WF-' + String(hoogste + 1).padStart(4, '0');
 }
 
-function schrijfBestelling(b) {
-  var sheet = tabblad(TAB_BESTELLINGEN);
-  var kop = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0].map(function (h) { return String(h).trim(); });
+// Zet de productkolommen in Bestellingen in dezelfde volgorde als tabblad Producten.
+// Ieder product krijgt een kolom; de vaste kolommen (tijdstip t/m totaal) blijven vooraan.
+function ordenProductKolommen(sheet, producten) {
+  sheet = sheet || tabblad(TAB_BESTELLINGEN);
+  producten = producten || leesProducten();
+  var vast = VASTE_KOLOMMEN.length;
 
-  // Nieuw product tijdens de campagne? Dan krijgt het hier een eigen kolom.
-  b.regels.forEach(function (r) {
-    if (kop.indexOf(r.product) === -1) {
-      kop.push(r.product);
-      sheet.getRange(1, kop.length).setValue(veilig(r.product)).setFontWeight('bold');
+  var kop = sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), vast)).getValues()[0];
+  for (var i = 0; i < vast; i++) {
+    if (String(kop[i]).trim().toLowerCase() !== VASTE_KOLOMMEN[i]) {
+      throw new Error('De eerste kolommen van Bestellingen moeten zijn: ' + VASTE_KOLOMMEN.join(', ') + '.');
     }
-  });
+  }
+
+  var rijen = Math.max(sheet.getLastRow(), 1);
+  var breedte = sheet.getLastColumn() - vast;
+  var blok = [];
+  if (breedte > 0) {
+    var bereik = sheet.getRange(1, vast + 1, rijen, breedte);
+    var waarden = bereik.getValues();
+    var formules = bereik.getFormulas();
+    blok = waarden.map(function (rij, r) {
+      return rij.map(function (w, c) { return formules[r][c] || w; });
+    });
+  } else {
+    for (var r = 0; r < rijen; r++) blok.push([]);
+  }
+
+  var nieuw = herordenProductBlok(blok, producten.map(function (p) { return p.product; }));
+  if (!nieuw) return;
+
+  nieuw[0] = nieuw[0].map(veilig);
+  if (breedte > 0) sheet.getRange(1, vast + 1, rijen, breedte).clearContent();
+  sheet.getRange(1, vast + 1, rijen, nieuw[0].length).setValues(nieuw);
+  sheet.getRange(1, vast + 1, 1, nieuw[0].length).setFontWeight('bold');
+}
+
+function schrijfBestelling(b, producten) {
+  var sheet = tabblad(TAB_BESTELLINGEN);
+  ordenProductKolommen(sheet, producten);
+  var kop = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0].map(function (h) { return String(h).trim(); });
 
   var k = kopIndex(kop);
   var bestelnummer = volgendBestelnummer(sheet, k.bestelnummer + 1);
@@ -347,9 +413,24 @@ function schrijfBestelling(b) {
 function onOpen() {
   SpreadsheetApp.getUi().createMenu('Winterfair')
     .addItem('Tabbladen aanmaken (setup)', 'setup')
+    .addItem('Kolommen van Bestellingen ordenen', 'ordenProductKolommen')
     .addSeparator()
     .addItem('Persoonsgegevens verwijderen (na de fair)', 'verwijderPersoonsgegevens')
     .addToUi();
+}
+
+// Na elke wijziging in tabblad Producten de kolommen van Bestellingen meeschuiven.
+function onEdit(e) {
+  if (!e || e.range.getSheet().getName() !== TAB_PRODUCTEN) return;
+  var lock = LockService.getScriptLock();
+  if (!lock.tryLock(10000)) return; // Lukt het nu niet, dan gebeurt het bij de volgende bestelling.
+  try {
+    ordenProductKolommen();
+  } catch (err) {
+    console.error(err);
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 // Maakt de tabbladen met kopregels en de startlijst aan.
