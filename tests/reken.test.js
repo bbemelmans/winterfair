@@ -212,6 +212,16 @@ test('verwijderd product: kolom blijft bewaard vóór totaal', () => {
   assert.deepStrictEqual(kopVan(sheet).slice(3), ['A', 'Oud', 'totaal', 'betaalwijze', 'afgerond', 'opmerking']);
   assert.deepStrictEqual([rijVan(sheet, 1).A, rijVan(sheet, 1).Oud], [1, 3]);
 });
+test('telefoonnummers die Sheets als getal zag krijgen hun 0 terug', () => {
+  const sheet = nepTabblad([
+    ['bestelnummer', 'naam', 'telefoonnummer', 'totaal', 'betaalwijze', 'afgerond', 'opmerking'],
+    ['WF-0001', 'An', 612345678, 3.5, '', '', ''],
+    ['WF-0002', 'Bo', '06 22 22 22 22', 3.5, '', '', '']
+  ]);
+  gs.ordenKolommen(sheet, prod([]));
+  assert.strictEqual(rijVan(sheet, 1).telefoonnummer, '0612345678');
+  assert.strictEqual(rijVan(sheet, 2).telefoonnummer, '06 22 22 22 22');
+});
 test('tweede keer ordenen verandert niets', () => {
   const sheet = nepTabblad([['tijdstip', 'bestelnummer', 'naam', 'contact', 'opmerking', 'regels', 'totaal', 'B', 'A']]);
   gs.ordenKolommen(sheet, prod(['A', 'B']));

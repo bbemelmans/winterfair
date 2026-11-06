@@ -33,6 +33,7 @@ var OUDE_KOPPEN = { contact: 'telefoonnummer' };
 var VERVALLEN_KOLOMMEN = ['tijdstip', 'datum', 'regels', 'opmerkingen marianne'];
 
 var EURO_FORMAAT = '"€" #,##0.00';
+var TEKST_FORMAAT = '@';
 var MAX_PER_PRODUCT = 50;
 
 var STARTLIJST = [
@@ -401,8 +402,27 @@ function ordenKolommen(sheet, producten) {
   var rijen = sheet.getMaxRows() - 1;
   if (rijen > 0) {
     sheet.getRange(2, k.totaal + 1, rijen, 1).setNumberFormat(EURO_FORMAAT);
+    sheet.getRange(2, k.telefoonnummer + 1, rijen, 1).setNumberFormat(TEKST_FORMAAT);
   }
+  herstelTelefoonnummers(sheet, k.telefoonnummer + 1);
   ruimLegeRijenOp(sheet);
+}
+
+// Sheets maakt van 0612345678 het getal 612345678. Zet zulke nummers terug als tekst
+// met de 0 ervoor (de kolom staat inmiddels op tekst, dus dat blijft zo).
+function herstelTelefoonnummers(sheet, kolom) {
+  var n = sheet.getLastRow();
+  if (n < 2) return;
+  var bereik = sheet.getRange(2, kolom, n - 1, 1);
+  var gewijzigd = false;
+  var waarden = bereik.getValues().map(function (r) {
+    var v = r[0];
+    if (typeof v !== 'number') return [v];
+    gewijzigd = true;
+    var tekst = String(v);
+    return [tekst.length === 9 ? '0' + tekst : tekst];
+  });
+  if (gewijzigd) bereik.setValues(waarden);
 }
 
 // Rijen zonder bestelnummer horen leeg te zijn. Een vroegere versie zette in de hele
@@ -457,6 +477,8 @@ function schrijfBestelling(b, producten) {
 
   var rijNummer = laatsteBestelRij(sheet, k.bestelnummer + 1) + 1;
   if (rijNummer > sheet.getMaxRows()) sheet.insertRowsAfter(sheet.getMaxRows(), 1);
+  // Eerst op tekst zetten, anders verdwijnt de 0 vooraan het telefoonnummer.
+  sheet.getRange(rijNummer, k.telefoonnummer + 1).setNumberFormat(TEKST_FORMAAT);
   sheet.getRange(rijNummer, 1, 1, rij.length).setValues([rij]);
   sheet.getRange(rijNummer, k.totaal + 1).setNumberFormat(EURO_FORMAAT);
   sheet.getRange(rijNummer, k.afgerond + 1)
