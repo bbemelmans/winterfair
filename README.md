@@ -137,7 +137,8 @@ Elke bestelling is één rij in **Bestellingen**, met deze kolommen van links na
 | Kolom | Inhoud |
 | --- | --- |
 | `bestelnummer` | WF-0001, WF-0002, … (oplopend, dus ook de volgorde van binnenkomst). |
-| `naam`, `telefoonnummer` | Zoals ingevuld door de besteller. |
+| `naam` | Zoals ingevuld door de besteller. |
+| `telefoonnummer` | Altijd 10 cijfers zonder spaties, bijv. 0612345678. Een besteller mag +31 of spaties typen; het script maakt er dit van. |
 | één kolom per product | Het aantal, in dezelfde volgorde als tabblad **Producten**. |
 | `totaal` | Totaalbedrag, door het script uitgerekend. |
 | `betaalwijze` | `Betaalverzoek` (wil direct betalen) of `Op de Winterfair` (betaalt bij het afhalen). |

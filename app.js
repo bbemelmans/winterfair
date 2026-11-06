@@ -218,7 +218,7 @@
     if (!naamOk) eerste = eerste || el.naam;
 
     var telefoonOk = R.telefoonGeldig(el.telefoon.value);
-    zetVeldfout(el.telefoon, telefoonOk ? '' : 'Vul je telefoonnummer in (10 cijfers).');
+    zetVeldfout(el.telefoon, telefoonOk ? '' : 'Vul een telefoonnummer van 10 cijfers in, bijvoorbeeld 06 12345678.');
     if (!telefoonOk) eerste = eerste || el.telefoon;
 
     var betaalwijze = gekozenBetaalwijze();

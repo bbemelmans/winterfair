@@ -84,6 +84,23 @@ test('naam en telefoonnummer verplicht, e-mail telt niet', () => {
   assert.strictEqual(R.telefoonGeldig('06 12345678'), true);
   assert.strictEqual(R.telefoonGeldig('iemand@voorbeeld.nl'), false);
 });
+test('telefoonnummer: 10 cijfers, spaties en - mogen, +31/0031 telt als 0', () => {
+  for (const f of [R, gs]) {
+    assert.strictEqual(f.normaliseerTelefoon('06 12 34 56 78'), '0612345678');
+    assert.strictEqual(f.normaliseerTelefoon('06-12345678'), '0612345678');
+    assert.strictEqual(f.normaliseerTelefoon('+31 6 12345678'), '0612345678');
+    assert.strictEqual(f.normaliseerTelefoon('0031 6 1234 5678'), '0612345678');
+    assert.strictEqual(f.normaliseerTelefoon('+316-12345678'), '0612345678');
+    assert.strictEqual(f.normaliseerTelefoon('061234567'), '', '9 cijfers');
+    assert.strictEqual(f.normaliseerTelefoon('06123456789'), '', '11 cijfers');
+    assert.strictEqual(f.normaliseerTelefoon('612345678'), '', 'zonder 0');
+    assert.strictEqual(f.normaliseerTelefoon('(06) 12345678'), '', 'haakjes');
+    assert.strictEqual(f.normaliseerTelefoon('06.12.34.56.78'), '', 'punten');
+    assert.strictEqual(f.normaliseerTelefoon('+32 470 12 34 56'), '', 'buitenland');
+  }
+  const s = gs.valideerEnBereken(producten, {}, { naam: 'A', telefoon: '+31 6-1234 5678', items: [{ product: 'Rookworst', aantal: 1 }] });
+  assert.strictEqual(s.telefoon, '0612345678', 'zo komt het in de Sheet');
+});
 test('oud formulier stuurt "contact": wordt als telefoonnummer gebruikt', () => {
   const s = gs.valideerEnBereken(producten, {}, { naam: 'A', contact: '0612345678', items: [{ product: 'Rookworst', aantal: 1 }] });
   assert.strictEqual(s.telefoon, '0612345678');

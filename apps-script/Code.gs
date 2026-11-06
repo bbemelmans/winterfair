@@ -138,7 +138,8 @@ function valideerEnBereken(producten, verkocht, invoer) {
   var opmerking = schoon(invoer.opmerking, 500, true);
 
   if (!naam) return { fout: 'Vul je naam in.' };
-  if (!telefoonGeldig(telefoon)) return { fout: 'Vul een geldig telefoonnummer in.' };
+  if (!telefoonGeldig(telefoon)) return { fout: 'Vul een telefoonnummer van 10 cijfers in, bijvoorbeeld 06 12345678.' };
+  telefoon = normaliseerTelefoon(telefoon);
   // Leeg mag nog (pagina van vóór de betaalkeuze); een onbekende waarde niet.
   var betaalwijze = invoer.betaalwijze == null || invoer.betaalwijze === '' ? '' : String(invoer.betaalwijze);
   if (betaalwijze && !BETAALWIJZEN.hasOwnProperty(betaalwijze)) return { fout: 'Kies hoe je wilt betalen.' };
@@ -222,11 +223,18 @@ function isOpen(sluitdatum, nu) {
   return !sluitdatum || nu.getTime() <= sluitdatum.getTime();
 }
 
-// 10 tot 15 cijfers; spaties, +, -, haakjes en punten mogen.
+// Nederlands nummer van 10 cijfers, bijv. 06 12345678. Spaties en - mogen;
+// +31 of 0031 vooraan telt als 0 (+31 6 12345678 wordt 0612345678).
+// Geeft het nummer zonder spaties terug, of '' als het niet klopt.
+function normaliseerTelefoon(waarde) {
+  var v = String(waarde == null ? '' : waarde).trim();
+  if (!/^\+?[\d\s\-]+$/.test(v)) return '';
+  v = v.replace(/[\s\-]/g, '').replace(/^(\+|00)31/, '0');
+  return /^0\d{9}$/.test(v) ? v : '';
+}
+
 function telefoonGeldig(waarde) {
-  var v = String(waarde || '').trim();
-  var cijfers = (v.match(/\d/g) || []).length;
-  return /^[\d\s()+\-.]+$/.test(v) && cijfers >= 10 && cijfers <= 15;
+  return normaliseerTelefoon(waarde) !== '';
 }
 
 function schoon(waarde, max, regelsToegestaan) {
