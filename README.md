@@ -141,6 +141,7 @@ Elke bestelling is één rij in **Bestellingen**, met deze kolommen van links na
 | `opmerking` | Opmerking van de besteller (optioneel). |
 | één kolom per product | Het aantal, in dezelfde volgorde als tabblad **Producten**. |
 | `totaal` | Totaalbedrag, door het script uitgerekend. |
+| `betaalwijze` | `Betaalverzoek` (wil direct betalen) of `Op de Winterfair` (betaalt bij het afhalen). |
 | `afgerond` | Vinkje voor Marianne als de bestelling is afgehandeld. |
 | `Opmerkingen Marianne` | Vrij veld voor wie de bestelling afhandelt, bijv. "betaald" of "belt nog terug". |
 
@@ -193,10 +194,18 @@ Op de pagina beloven we: *"We gebruiken je gegevens alleen voor deze bestelling 
 ## Nog open (staat als placeholder op de pagina)
 
 - `[PRIJS]`: prijzen van de macadamiamixen. Invullen in de Sheet.
-- `[BETAALWIJZE]`: bij afhalen of via Tikkie. Staat twee keer in de code:
-  - in `index.html` (zoek op `[BETAALWIJZE]`);
-  - in `app.js` (de bevestiging na het bestellen).
-- Link Jaap Pijpelink: in `sponsors.json`.
+- **Link naar het betaalverzoek.** Staat nu op een nep-adres (`https://example.com/betaalverzoek-winterfair`). Zet de echte link in `config.js` bij `betaalverzoekUrl` en verhoog daarna het `?v=`-nummer (zie hieronder).
+
+## Betalen
+
+Bestellers kiezen in het formulier tussen **direct betalen via een betaalverzoek** en **betalen op de Winterfair** bij het afhalen. Na het bestellen zien ze:
+
+- bij betaalverzoek: het bedrag, hun bestelnummer (om bij de omschrijving te zetten) en een knop **Naar het betaalverzoek**;
+- bij de Winterfair: dat ze het bedrag bij het afhalen betalen.
+
+De keuze staat in de kolom `betaalwijze` van Bestellingen. Of iemand echt betaald heeft, ziet het script niet; dat kan Marianne bijhouden in **Opmerkingen Marianne** of met het vinkje **afgerond**.
+
+Gebruik een betaalverzoek waarbij de besteller zelf het bedrag invult (bijvoorbeeld een Tikkie of bankverzoek zonder vast bedrag), want elke bestelling heeft een ander totaal.
 
 **Na een wijziging in `app.js`, `reken.js`, `style.css` of `config.js`:** verhoog in `index.html` het nummer achter `?v=` bij alle vier de bestanden (bijv. `?v=4` → `?v=5`). Anders kunnen bezoekers nog even de oude versie uit hun browsergeheugen zien.
 

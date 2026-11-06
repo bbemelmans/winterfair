@@ -24,7 +24,9 @@ var PRODUCT_KOLOMMEN = ['volgorde', 'product', 'prijs', 'actie_aantal', 'actie_p
 // Indeling van tabblad Bestellingen: deze kolommen vooraan, dan één kolom per product
 // (in de volgorde van tabblad Producten), dan deze kolommen achteraan.
 var KOLOMMEN_VOOR = ['bestelnummer', 'naam', 'telefoonnummer', 'opmerking'];
-var KOLOMMEN_NA = ['totaal', 'afgerond', 'Opmerkingen Marianne'];
+var KOLOMMEN_NA = ['totaal', 'betaalwijze', 'afgerond', 'Opmerkingen Marianne'];
+// Betaalkeuzes uit het formulier en hoe ze in de Sheet komen te staan.
+var BETAALWIJZEN = { betaalverzoek: 'Betaalverzoek', winterfair: 'Op de Winterfair' };
 // Kolomnamen uit eerdere versies; die worden vanzelf hernoemd.
 var OUDE_KOPPEN = { contact: 'telefoonnummer' };
 // Kolommen uit eerdere versies die niet meer nodig zijn; die worden verwijderd.
@@ -127,7 +129,7 @@ function json(data) {
 /* ---------- Controleren en rekenen (geen Sheet-toegang, los te testen) ---------- */
 
 // producten: uit leesProducten(); verkocht: { productnaam: aantal }
-// Geeft { fout } of { naam, telefoon, opmerking, regels, totaal }.
+// Geeft { fout } of { naam, telefoon, opmerking, betaalwijze, regels, totaal }.
 function valideerEnBereken(producten, verkocht, invoer) {
   var naam = schoon(invoer.naam, 100);
   // "contact" is de veldnaam van de vorige versie van het formulier.
@@ -136,6 +138,9 @@ function valideerEnBereken(producten, verkocht, invoer) {
 
   if (!naam) return { fout: 'Vul je naam in.' };
   if (!telefoonGeldig(telefoon)) return { fout: 'Vul een geldig telefoonnummer in.' };
+  // Leeg mag nog (pagina van vóór de betaalkeuze); een onbekende waarde niet.
+  var betaalwijze = invoer.betaalwijze == null || invoer.betaalwijze === '' ? '' : String(invoer.betaalwijze);
+  if (betaalwijze && !BETAALWIJZEN.hasOwnProperty(betaalwijze)) return { fout: 'Kies hoe je wilt betalen.' };
   if (!Array.isArray(invoer.items)) return { fout: 'Kies minstens één product.' };
 
   var perNaam = {};
@@ -180,7 +185,7 @@ function valideerEnBereken(producten, verkocht, invoer) {
   }
 
   if (!regels.length) return { fout: 'Kies minstens één product.' };
-  return { naam: naam, telefoon: telefoon, opmerking: opmerking, regels: regels, totaal: totaal };
+  return { naam: naam, telefoon: telefoon, opmerking: opmerking, betaalwijze: betaalwijze, regels: regels, totaal: totaal };
 }
 
 // Per volledige set van actieAantal geldt actiePrijs, de rest kost de stukprijs.
@@ -447,6 +452,7 @@ function schrijfBestelling(b, producten) {
   rij[k.telefoonnummer] = veilig(b.telefoon);
   rij[k.opmerking] = veilig(b.opmerking);
   rij[k.totaal] = b.totaal / 100;
+  rij[k.betaalwijze] = BETAALWIJZEN[b.betaalwijze] || '';
   b.regels.forEach(function (r) { rij[kop.indexOf(r.product)] = r.aantal; });
 
   var rijNummer = laatsteBestelRij(sheet, k.bestelnummer + 1) + 1;

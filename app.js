@@ -14,6 +14,7 @@
   var WHATSAPP = 'https://wa.me/31657255674';
   var MAX_PER_PRODUCT = 50;
   var WEBAPP_URL = (window.WINTERFAIR_CONFIG && window.WINTERFAIR_CONFIG.webappUrl) || '';
+  var BETAALVERZOEK_URL = (window.WINTERFAIR_CONFIG && window.WINTERFAIR_CONFIG.betaalverzoekUrl) || '';
 
   var params = new URLSearchParams(location.search);
   var MOCK = params.has('mock');
@@ -220,6 +221,11 @@
     zetVeldfout(el.telefoon, telefoonOk ? '' : 'Vul je telefoonnummer in (10 cijfers).');
     if (!telefoonOk) eerste = eerste || el.telefoon;
 
+    var betaalwijze = gekozenBetaalwijze();
+    var betaalFout = document.getElementById('betaalwijze-fout');
+    betaalFout.textContent = betaalwijze ? '' : 'Kies hoe je wilt betalen.';
+    if (!betaalwijze) eerste = eerste || el.formulier.querySelector('input[name="betaalwijze"]');
+
     var heeftProducten = R.bereken(producten, aantallen).regels.length > 0;
     if (!heeftProducten) {
       toonFout('Kies minstens één product met de plus-knop.');
@@ -233,12 +239,34 @@
     return !eerste && heeftProducten;
   }
 
+  function gekozenBetaalwijze() {
+    var gekozen = el.formulier.querySelector('input[name="betaalwijze"]:checked');
+    return gekozen ? gekozen.value : '';
+  }
+
+  function betaalBlok(antwoord, betaalwijze) {
+    var blok = maak('div', 'betalen');
+    if (betaalwijze === 'betaalverzoek') {
+      blok.appendChild(maak('p', null, 'Je hebt gekozen om direct te betalen. Maak ' + R.formatEuro(antwoord.totaal) +
+        ' over via het betaalverzoek en vermeld je bestelnummer ' + antwoord.bestelnummer + '.'));
+      var knop = maak('a', 'knop betalen__knop', 'Naar het betaalverzoek');
+      knop.href = BETAALVERZOEK_URL;
+      knop.target = '_blank';
+      knop.rel = 'noopener';
+      knop.appendChild(maak('span', 'sr-only', ' (opent in nieuw tabblad)'));
+      blok.appendChild(knop);
+    } else {
+      blok.appendChild(maak('p', null, 'Je betaalt ' + R.formatEuro(antwoord.totaal) + ' op de Winterfair, bij het afhalen.'));
+    }
+    return blok;
+  }
+
   function toonGesloten() {
     el.formulier.hidden = true;
     el.gesloten.hidden = false;
   }
 
-  function toonBevestiging(antwoord) {
+  function toonBevestiging(antwoord, betaalwijze) {
     var b = el.bevestiging;
     b.textContent = '';
     b.appendChild(maak('h3', null, 'Bedankt voor je bestelling!'));
@@ -262,7 +290,7 @@
     b.appendChild(totaal);
 
     b.appendChild(maak('p', null, 'Je haalt je bestelling op tijdens de Winterfair: zaterdag 12 december, 10.00 – 14.00 uur, Nieuweweg 215 in Veenendaal.'));
-    b.appendChild(maak('p', 'betalen', 'Betalen: [BETAALWIJZE]'));
+    b.appendChild(betaalBlok(antwoord, betaalwijze));
 
     var wijzigen = maak('p', null, 'Wil je je bestelling wijzigen? ');
     var app = maak('a', null, 'Stuur Marianne een berichtje via WhatsApp');
@@ -294,6 +322,7 @@
       telefoon: el.telefoon.value.trim(),
       contact: el.telefoon.value.trim(), // voor het script van vóór november; kan later weg
       opmerking: el.opmerking.value.trim(),
+      betaalwijze: gekozenBetaalwijze(),
       website: el.formulier.elements.website.value,
       items: items
     };
@@ -305,7 +334,7 @@
     verstuur(bestelling)
       .then(function (antwoord) {
         if (antwoord && antwoord.ok) {
-          toonBevestiging(antwoord);
+          toonBevestiging(antwoord, bestelling.betaalwijze);
         } else if (antwoord && antwoord.gesloten) {
           toonGesloten();
         } else {

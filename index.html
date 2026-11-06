@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@400;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=9">
+<link rel="stylesheet" href="style.css?v=10">
 </head>
 <body>
 <a class="skiplink" href="#bestellen">Direct naar bestellen</a>
@@ -83,7 +83,18 @@
               <input type="text" name="website" tabindex="-1" autocomplete="off">
             </label>
           </div>
-          <p class="betalen">Betalen: [BETAALWIJZE]</p>
+          <fieldset class="betaalkeuze" aria-describedby="betaalwijze-fout">
+            <legend>Hoe wil je betalen?</legend>
+            <label class="keuze">
+              <input type="radio" name="betaalwijze" value="betaalverzoek" required>
+              <span><strong>Direct betalen</strong> via een betaalverzoek</span>
+            </label>
+            <label class="keuze">
+              <input type="radio" name="betaalwijze" value="winterfair">
+              <span><strong>Betalen op de Winterfair</strong> bij het afhalen</span>
+            </label>
+            <span class="veld__fout" id="betaalwijze-fout"></span>
+          </fieldset>
         </div>
 
         <p id="formulierfout" class="melding melding--fout" role="alert" hidden></p>
@@ -121,8 +132,8 @@
   </div>
 </footer>
 
-<script src="config.js?v=9"></script>
-<script src="reken.js?v=9"></script>
-<script src="app.js?v=9"></script>
+<script src="config.js?v=10"></script>
+<script src="reken.js?v=10"></script>
+<script src="app.js?v=10"></script>
 </body>
 </html>
