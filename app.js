@@ -101,10 +101,11 @@
     return tekst;
   }
 
-  // Alleen een gewone bestandsnaam uit de Sheet, bijv. "advocaat.jpg".
+  // Alleen een gewone bestandsnaam uit de Sheet, bijv. "advocaat.jpg" of "panettone cake.jpeg"
+  // (spaties mogen; mappen en vreemde tekens niet).
   function fotoPad(p) {
     var naam = String(p.foto || '').trim();
-    return /^[\w\-.]+\.(jpe?g|png|webp)$/i.test(naam) ? 'img/producten/' + naam : '';
+    return /^[\w\-. ]+\.(jpe?g|png|webp)$/i.test(naam) ? 'img/producten/' + encodeURIComponent(naam) : '';
   }
 
   function legeFoto(tekst) {

@@ -70,10 +70,31 @@
     "alt": "Advertentie JufMeester: brede ervaring opdoen als juf of meester op diverse scholen, met regie over je eigen agenda"
   },
   {
+    "naam": "Mate4Cars",
+    "afbeelding": "img/sponsors/mate4cars.jpg",
+    "url": "https://www.mate4cars.nl",
+    "formaat": "staand",
+    "alt": "Advertentie Mate4Cars, dé specialist in stoelhoezen: bij een bestelling van een stoelhoes gaat 20% van de opbrengst naar het goede doel, actie loopt tot 12 december 2026. Telefoon 06-51746100."
+  },
+  {
     "naam": "deKolenboer.nl",
     "afbeelding": "img/sponsors/dekolenboer.jpg",
     "url": "https://www.dekolenboer.nl",
     "formaat": "breed",
     "alt": "Advertentie deKolenboer.nl, webshop voor kolen: antraciet, eierkolen, vetkolen en Record bruinkoolbriketten. Telefoon 0318 512187."
+  },
+  {
+    "naam": "Buitenhorst",
+    "afbeelding": "img/sponsors/buitenhorst.jpeg",
+    "url": "",
+    "formaat": "staand",
+    "alt": "Logo Buitenhorst, vers en smakelijk"
+  },
+  {
+    "naam": "Kaas van het Huis",
+    "afbeelding": "img/sponsors/kaas-van-het-huis.jpeg",
+    "url": "",
+    "formaat": "staand",
+    "alt": "Logo Kaas van het Huis"
   }
 ]
