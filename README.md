@@ -138,14 +138,13 @@ Elke bestelling is één rij in **Bestellingen**, met deze kolommen van links na
 | --- | --- |
 | `bestelnummer` | WF-0001, WF-0002, … (oplopend, dus ook de volgorde van binnenkomst). |
 | `naam`, `telefoonnummer` | Zoals ingevuld door de besteller. |
-| `opmerking` | Opmerking van de besteller (optioneel). |
 | één kolom per product | Het aantal, in dezelfde volgorde als tabblad **Producten**. |
 | `totaal` | Totaalbedrag, door het script uitgerekend. |
 | `betaalwijze` | `Betaalverzoek` (wil direct betalen) of `Op de Winterfair` (betaalt bij het afhalen). |
 | `afgerond` | Vinkje voor Marianne als de bestelling is afgehandeld. |
-| `Opmerkingen Marianne` | Vrij veld voor wie de bestelling afhandelt, bijv. "betaald" of "belt nog terug". |
+| `opmerking` | Opmerking van de besteller (optioneel). |
 
-De kolommen `afgerond` en `Opmerkingen Marianne` vult het script nooit in; die zijn voor Marianne.
+De kolom `afgerond` vult het script nooit in; die is voor Marianne.
 
 De productkolommen volgen altijd tabblad **Producten** (kolom `volgorde`). Pas je daar de volgorde aan of voeg je een product toe, dan schuiven de kolommen in Bestellingen vanzelf mee. Hele kolommen schuiven, dus aantallen, vinkjes en opmerkingen blijven bij de juiste bestelling. Gebeurt dat een keer niet, kies dan **Winterfair → Kolommen van Bestellingen ordenen**. Voeg zelf geen kolommen toe in Bestellingen; maak voor overzichten liever een apart tabblad.
 
@@ -182,7 +181,7 @@ Nog in te vullen: de link van **Jaap Pijpelink**. Zet die bij `"url"` in `sponso
 Op de pagina beloven we: *"We gebruiken je gegevens alleen voor deze bestelling en verwijderen ze na de Winterfair."*
 
 1. Open de Sheet en kies **Winterfair → Persoonsgegevens verwijderen (na de fair)**. Bevestig met **Ja**.
-2. Naam, telefoonnummer, opmerking en Opmerkingen Marianne zijn nu bij alle bestellingen leeg. Bestelnummers, aantallen en totalen blijven staan, zodat je de opbrengst nog kunt zien.
+2. Naam, telefoonnummer en opmerking zijn nu bij alle bestellingen leeg. Bestelnummers, aantallen en totalen blijven staan, zodat je de opbrengst nog kunt zien.
 3. Google bewaart oude versies in **Bestand → Versiegeschiedenis**, en daarin staan de gegevens nog. Wil je ze echt helemaal kwijt?
    - Maak via **Bestand → Kopie maken** een kopie. Een kopie heeft geen oude versies.
    - Verwijder de oorspronkelijke Sheet en leeg de prullenbak van Google Drive.
@@ -194,7 +193,6 @@ Op de pagina beloven we: *"We gebruiken je gegevens alleen voor deze bestelling 
 ## Nog open (staat als placeholder op de pagina)
 
 - `[PRIJS]`: prijzen van de macadamiamixen. Invullen in de Sheet.
-- **Link naar het betaalverzoek.** Staat nu op een nep-adres (`https://example.com/betaalverzoek-winterfair`). Zet de echte link in `config.js` bij `betaalverzoekUrl` en verhoog daarna het `?v=`-nummer (zie hieronder).
 
 ## Betalen
 
@@ -203,7 +201,9 @@ Bestellers kiezen in het formulier tussen **direct betalen via een betaalverzoek
 - bij betaalverzoek: het bedrag, hun bestelnummer (om bij de omschrijving te zetten) en een knop **Naar het betaalverzoek**;
 - bij de Winterfair: dat ze het bedrag bij het afhalen betalen.
 
-De keuze staat in de kolom `betaalwijze` van Bestellingen. Of iemand echt betaald heeft, ziet het script niet; dat kan Marianne bijhouden in **Opmerkingen Marianne** of met het vinkje **afgerond**.
+De knop gaat naar de link in `config.js` bij `betaalverzoekUrl` (nu het Rabobank-betaalverzoek).
+
+De keuze staat in de kolom `betaalwijze` van Bestellingen. Of iemand echt betaald heeft, ziet het script niet; dat kan Marianne bijhouden met het vinkje **afgerond**.
 
 Gebruik een betaalverzoek waarbij de besteller zelf het bedrag invult (bijvoorbeeld een Tikkie of bankverzoek zonder vast bedrag), want elke bestelling heeft een ander totaal.
 

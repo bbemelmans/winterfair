@@ -23,14 +23,14 @@ var PRODUCT_KOLOMMEN = ['volgorde', 'product', 'prijs', 'actie_aantal', 'actie_p
 
 // Indeling van tabblad Bestellingen: deze kolommen vooraan, dan één kolom per product
 // (in de volgorde van tabblad Producten), dan deze kolommen achteraan.
-var KOLOMMEN_VOOR = ['bestelnummer', 'naam', 'telefoonnummer', 'opmerking'];
-var KOLOMMEN_NA = ['totaal', 'betaalwijze', 'afgerond', 'Opmerkingen Marianne'];
+var KOLOMMEN_VOOR = ['bestelnummer', 'naam', 'telefoonnummer'];
+var KOLOMMEN_NA = ['totaal', 'betaalwijze', 'afgerond', 'opmerking'];
 // Betaalkeuzes uit het formulier en hoe ze in de Sheet komen te staan.
 var BETAALWIJZEN = { betaalverzoek: 'Betaalverzoek', winterfair: 'Op de Winterfair' };
 // Kolomnamen uit eerdere versies; die worden vanzelf hernoemd.
 var OUDE_KOPPEN = { contact: 'telefoonnummer' };
 // Kolommen uit eerdere versies die niet meer nodig zijn; die worden verwijderd.
-var VERVALLEN_KOLOMMEN = ['tijdstip', 'datum', 'regels'];
+var VERVALLEN_KOLOMMEN = ['tijdstip', 'datum', 'regels', 'opmerkingen marianne'];
 
 var EURO_FORMAAT = '"€" #,##0.00';
 var MAX_PER_PRODUCT = 50;

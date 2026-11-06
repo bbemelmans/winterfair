@@ -165,42 +165,42 @@ const kopVan = sheet => sheet.grid[0].slice(0, sheet.getLastColumn());
 const rijVan = (sheet, r) => { const k = kopVan(sheet); const o = {}; k.forEach((h, c) => { if (sheet.grid[r][c] !== '') o[h] = sheet.grid[r][c]; }); return o; };
 const prod = namen => namen.map(product => ({ product }));
 
-test('oud tabblad wordt omgezet: zonder datum en regels, met telefoonnummer en kolommen voor Marianne', () => {
+test('oud tabblad wordt omgezet: zonder datum en regels, met telefoonnummer en opmerking achteraan', () => {
   const sheet = nepTabblad([
     ['tijdstip', 'bestelnummer', 'naam', 'contact', 'opmerking', 'regels', 'totaal', 'Erwtensoep', 'Rookworst', 'Advocaat'],
     ['d1', 'WF-0001', 'An', '0611111111', '', '2× Erwtensoep', 15.9, 2, '', ''],
     ['d2', 'WF-0002', 'Bo', '0622222222', 'graag vroeg', '1× Advocaat; 4× Rookworst', 23.75, '', 4, 1]
   ]);
   gs.ordenKolommen(sheet, prod(['Advocaat', 'Erwtensoep', 'Rookworst']));
-  assert.deepStrictEqual(kopVan(sheet), ['bestelnummer', 'naam', 'telefoonnummer', 'opmerking',
-    'Advocaat', 'Erwtensoep', 'Rookworst', 'totaal', 'betaalwijze', 'afgerond', 'Opmerkingen Marianne']);
+  assert.deepStrictEqual(kopVan(sheet), ['bestelnummer', 'naam', 'telefoonnummer',
+    'Advocaat', 'Erwtensoep', 'Rookworst', 'totaal', 'betaalwijze', 'afgerond', 'opmerking']);
   assert.deepStrictEqual(rijVan(sheet, 1), { bestelnummer: 'WF-0001', naam: 'An', telefoonnummer: '0611111111',
     Erwtensoep: 2, totaal: 15.9 });
   assert.deepStrictEqual(rijVan(sheet, 2), { bestelnummer: 'WF-0002', naam: 'Bo', telefoonnummer: '0622222222',
     opmerking: 'graag vroeg', Advocaat: 1, Rookworst: 4, totaal: 23.75 });
 });
-test('huidige indeling: kolommen datum en regels verdwijnen, de rest blijft staan', () => {
+test('huidige indeling: datum, regels en Opmerkingen Marianne verdwijnen, opmerking gaat naar het eind', () => {
   const sheet = nepTabblad([
     ['datum', 'bestelnummer', 'naam', 'telefoonnummer', 'opmerking', 'regels', 'Rookworst', 'totaal', 'afgerond', 'Opmerkingen Marianne'],
     ['d1', 'WF-0001', 'An', '0611111111', 'graag vroeg', '1× Rookworst', 1, 3.5, true, 'betaald']
   ]);
   gs.ordenKolommen(sheet, prod(['Rookworst']));
-  assert.deepStrictEqual(kopVan(sheet), ['bestelnummer', 'naam', 'telefoonnummer', 'opmerking', 'Rookworst', 'totaal', 'betaalwijze', 'afgerond', 'Opmerkingen Marianne']);
+  assert.deepStrictEqual(kopVan(sheet), ['bestelnummer', 'naam', 'telefoonnummer', 'Rookworst', 'totaal', 'betaalwijze', 'afgerond', 'opmerking']);
   assert.deepStrictEqual(rijVan(sheet, 1), { bestelnummer: 'WF-0001', naam: 'An', telefoonnummer: '0611111111',
-    opmerking: 'graag vroeg', Rookworst: 1, totaal: 3.5, afgerond: true, 'Opmerkingen Marianne': 'betaald' });
+    opmerking: 'graag vroeg', Rookworst: 1, totaal: 3.5, afgerond: true });
 });
-test('nieuw product en andere volgorde: opmerkingen van Marianne blijven bij de juiste bestelling', () => {
+test('nieuw product en andere volgorde: vinkjes en opmerkingen blijven bij de juiste bestelling', () => {
   const sheet = nepTabblad([
     ['datum', 'bestelnummer', 'naam', 'telefoonnummer', 'opmerking', 'regels', 'Advocaat', 'Rookworst', 'totaal', 'afgerond', 'Opmerkingen Marianne'],
-    ['d1', 'WF-0001', 'An', '0611111111', '', '1× Advocaat', 1, '', 9.25, true, 'betaald'],
+    ['d1', 'WF-0001', 'An', '0611111111', 'graag vroeg', '1× Advocaat', 1, '', 9.25, true, 'betaald'],
     ['d2', 'WF-0002', 'Bo', '0622222222', '', '3× Rookworst', '', 3, 10.5, '', 'belt nog']
   ]);
   gs.ordenKolommen(sheet, prod(['Rookworst', 'Groenstuk', 'Advocaat']));
-  assert.deepStrictEqual(kopVan(sheet).slice(4), ['Rookworst', 'Groenstuk', 'Advocaat', 'totaal', 'betaalwijze', 'afgerond', 'Opmerkingen Marianne']);
-  assert.strictEqual(rijVan(sheet, 1)['Opmerkingen Marianne'], 'betaald');
+  assert.deepStrictEqual(kopVan(sheet).slice(3), ['Rookworst', 'Groenstuk', 'Advocaat', 'totaal', 'betaalwijze', 'afgerond', 'opmerking']);
+  assert.strictEqual(rijVan(sheet, 1).opmerking, 'graag vroeg');
   assert.strictEqual(rijVan(sheet, 1).afgerond, true);
   assert.strictEqual(rijVan(sheet, 1).Advocaat, 1);
-  assert.strictEqual(rijVan(sheet, 2)['Opmerkingen Marianne'], 'belt nog');
+  assert.strictEqual(rijVan(sheet, 2).opmerking, undefined);
   assert.strictEqual(rijVan(sheet, 2).Rookworst, 3);
 });
 test('verwijderd product: kolom blijft bewaard vóór totaal', () => {
@@ -209,7 +209,7 @@ test('verwijderd product: kolom blijft bewaard vóór totaal', () => {
     ['d1', 'WF-0001', 'An', '0611111111', '', '', 3, 1, 5, '', '']
   ]);
   gs.ordenKolommen(sheet, prod(['A']));
-  assert.deepStrictEqual(kopVan(sheet).slice(4), ['A', 'Oud', 'totaal', 'betaalwijze', 'afgerond', 'Opmerkingen Marianne']);
+  assert.deepStrictEqual(kopVan(sheet).slice(3), ['A', 'Oud', 'totaal', 'betaalwijze', 'afgerond', 'opmerking']);
   assert.deepStrictEqual([rijVan(sheet, 1).A, rijVan(sheet, 1).Oud], [1, 3]);
 });
 test('tweede keer ordenen verandert niets', () => {
@@ -232,8 +232,8 @@ test('losse vinkjes in lege rijen: bestellingen schuiven omhoog, nieuwe komt ero
   const nummer = gs.schrijfBestelling(b, [{ product: 'Rookworst' }, { product: 'Advocaat, groot' }]);
   assert.strictEqual(nummer, 'WF-0003');
   assert.deepStrictEqual([1, 2, 3].map(r => rijVan(sheet, r).bestelnummer), ['WF-0001', 'WF-0002', 'WF-0003']);
-  assert.strictEqual(rijVan(sheet, 1)['Opmerkingen Marianne'], 'betaald');
   assert.strictEqual(rijVan(sheet, 1).afgerond, true);
+  assert.ok(!kopVan(sheet).includes('Opmerkingen Marianne'));
   assert.strictEqual(sheet.getLastRow(), 4);
 });
 test('nieuwe bestelling komt in de juiste kolommen', () => {
@@ -248,7 +248,7 @@ test('nieuwe bestelling komt in de juiste kolommen', () => {
   assert.strictEqual(rij.totaal, 13.5);
   assert.strictEqual(rij.betaalwijze, 'Betaalverzoek');
   assert.ok(!('datum' in rij) && !('regels' in rij));
-  assert.deepStrictEqual(kopVan(sheet).slice(-4), ['totaal', 'betaalwijze', 'afgerond', 'Opmerkingen Marianne']);
+  assert.deepStrictEqual(kopVan(sheet).slice(-4), ['totaal', 'betaalwijze', 'afgerond', 'opmerking']);
 
   const b2 = gs.valideerEnBereken(producten, {}, { naam: 'Dirk', telefoon: '0644444444', betaalwijze: 'winterfair', items: [{ product: 'Rookworst', aantal: 1 }] });
   gs.schrijfBestelling(b2, producten);
