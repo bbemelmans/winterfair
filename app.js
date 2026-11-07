@@ -392,7 +392,11 @@
     fetch('sponsors.json', { cache: 'no-cache' })
       .then(function (res) { return res.json(); })
       .then(function (sponsors) {
+        // Sponsors met formaat "links" of "rechts" komen samen in een blok met twee
+        // losse kolommen, zodat advertenties van verschillende hoogte netjes aansluiten.
+        var blok = null;
         sponsors.forEach(function (s) {
+          var inKolom = s.formaat === 'links' || s.formaat === 'rechts';
           var url = (s.url || '').trim();
           var formaat = /^(breed|midden)$/.test(s.formaat) ? ' sponsor--' + s.formaat : '';
           var kaart = maak(url ? 'a' : 'div', 'sponsor' + formaat);
@@ -410,7 +414,18 @@
             label.appendChild(maak('span', 'sr-only', ' (opent in nieuw tabblad)'));
             kaart.appendChild(label);
           }
-          el.sponsors.appendChild(kaart);
+          if (inKolom) {
+            if (!blok) {
+              blok = maak('div', 'sponsors__kolommen');
+              blok.links = blok.appendChild(maak('div', 'sponsors__kolom'));
+              blok.rechts = blok.appendChild(maak('div', 'sponsors__kolom'));
+              el.sponsors.appendChild(blok);
+            }
+            blok[s.formaat].appendChild(kaart);
+          } else {
+            blok = null;
+            el.sponsors.appendChild(kaart);
+          }
         });
       })
       .catch(function (err) { console.error('Sponsors laden mislukt', err); });

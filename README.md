@@ -170,7 +170,7 @@ Het script rekent prijzen en totaal zelf uit met de prijzen in de Sheet. Wat de 
    }
    ```
 
-   - `formaat`: `breed` (over de hele breedte), `staand` of `liggend` (half, twee naast elkaar), of `midden` (half, alleen op een rij in het midden).
+   - `formaat`: `breed` (over de hele breedte), `staand` (half, twee naast elkaar en even hoog), `midden` (half, alleen op een rij in het midden), of `links` / `rechts`. Sponsors met `links` en `rechts` die direct na elkaar in het bestand staan, komen samen in een blok met twee losse kolommen. Zo passen advertenties van verschillende hoogte netjes in elkaar (zoals Pedicure en Vlaanderen ICT links, Wenskaarten, JufMeester en Marty rechts).
    - De volgorde in het bestand is de volgorde op de pagina. Zet advertenties met een vergelijkbare vorm na elkaar, dan worden ze in een rij even hoog zonder grote witte randen.
    - `url`: laat leeg (`""`) als er geen website is. De advertentie is dan niet klikbaar.
    - `alt`: korte beschrijving voor mensen die de afbeelding niet zien. Mag je weglaten; dan wordt het "Advertentie" + naam.
