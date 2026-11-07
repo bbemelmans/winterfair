@@ -199,7 +199,7 @@ Op de pagina beloven we: *"We gebruiken je gegevens alleen voor deze bestelling 
 
 Bestellers kiezen in het formulier tussen **direct betalen via een betaalverzoek** en **betalen op de Winterfair** bij het afhalen. Na het bestellen zien ze:
 
-- bij betaalverzoek: het bedrag, hun bestelnummer (om bij de omschrijving te zetten) en een knop **Naar het betaalverzoek**;
+- bij betaalverzoek: het bedrag en een knop **Naar het betaalverzoek**. In het betaalverzoek kan geen bestelnummer mee; koppel betalingen aan bestellingen op naam en bedrag;
 - bij de Winterfair: dat ze het bedrag bij het afhalen betalen.
 
 De knop gaat naar de link in `config.js` bij `betaalverzoekUrl` (nu het Rabobank-betaalverzoek).

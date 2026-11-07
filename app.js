@@ -248,7 +248,7 @@
     var blok = maak('div', 'betalen');
     if (betaalwijze === 'betaalverzoek') {
       blok.appendChild(maak('p', null, 'Je hebt gekozen om direct te betalen. Maak ' + R.formatEuro(antwoord.totaal) +
-        ' over via het betaalverzoek en vermeld je bestelnummer ' + antwoord.bestelnummer + '.'));
+        ' over via het betaalverzoek.'));
       var knop = maak('a', 'knop betalen__knop', 'Naar het betaalverzoek');
       knop.href = BETAALVERZOEK_URL;
       knop.target = '_blank';
