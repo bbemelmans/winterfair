@@ -202,13 +202,16 @@ a.kaart__klein { min-height: 44px; display: inline-flex; align-items: center; ma
 
 /* Sponsors */
 .sponsors { padding-top: 32px; padding-bottom: 32px; display: flex; flex-direction: column; gap: 16px; }
-.sponsors__lijst { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: start; }
+/* Advertenties naast elkaar worden even hoog; de afbeelding blijft heel en staat in het midden. */
+.sponsors__lijst { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: stretch; }
 .sponsor {
   display: flex; flex-direction: column; border: 2px solid var(--bordeaux); border-radius: 12px;
   overflow: hidden; text-decoration: none; background: var(--wit);
 }
 .sponsor--breed { grid-column: 1 / -1; }
-.sponsor img { width: 100%; height: auto; }
+/* Losse advertentie: zelfde breedte als de andere, in het midden. */
+.sponsor--midden { grid-column: 1 / -1; justify-self: center; width: calc(50% - 6px); }
+.sponsor img { width: 100%; height: auto; flex: 1 1 auto; min-height: 0; object-fit: contain; }
 .sponsor__link { padding: 10px; min-height: 44px; font-size: 13px; font-weight: 600; color: var(--bordeaux); overflow-wrap: anywhere; }
 a.sponsor:hover .sponsor__link { text-decoration: underline; }
 

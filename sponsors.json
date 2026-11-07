@@ -7,6 +7,13 @@
     "alt": "Advertentie Jaap Pijpelink Solutions: meer inzicht, slimmere processen, betere service. Procesoptimalisatie, data-analyse en dashboards, automatisering en serviceoptimalisatie. Telefoon 06 5475 2703."
   },
   {
+    "naam": "Mate4Cars",
+    "afbeelding": "img/sponsors/mate4cars.jpg",
+    "url": "https://www.mate4cars.nl",
+    "formaat": "breed",
+    "alt": "Advertentie Mate4Cars, dé specialist in stoelhoezen: bij een bestelling van een stoelhoes gaat 20% van de opbrengst naar het goede doel, actie loopt tot 12 december 2026. Telefoon 06-51746100."
+  },
+  {
     "naam": "Mantelzorgers Ontsorgd",
     "afbeelding": "img/sponsors/ontsorgd.jpg",
     "url": "https://www.ontsorgd.nl",
@@ -28,6 +35,13 @@
     "alt": "Advertentie Marina's Pedicurepraktijk in het Binnenveld, telefoon 06 10123153. Behandeling van likdoorns, ingroeiende nagels, overmatig eelt en kalknagels. Werkdagen dinsdag, woensdag en vrijdag, ambulant in overleg, aangesloten bij ProVoet."
   },
   {
+    "naam": "Hertog Boomverzorging",
+    "afbeelding": "img/sponsors/hertog-boomverzorging.jpg",
+    "url": "",
+    "formaat": "staand",
+    "alt": "Advertentie Hertog Boomverzorging, telefoon 06 18781279, e-mail hertogboomverzorging@gmail.com"
+  },
+  {
     "naam": "Vlaanderen ICT",
     "afbeelding": "img/sponsors/vlaanderen-ict.jpg",
     "url": "https://www.vlaanderenict.nl",
@@ -42,39 +56,25 @@
     "alt": "Advertentie Huize Huissoon, handgemaakte christelijke hoofdbedekking"
   },
   {
-    "naam": "Hertog Boomverzorging",
-    "afbeelding": "img/sponsors/hertog-boomverzorging.jpg",
-    "url": "",
-    "formaat": "staand",
-    "alt": "Advertentie Hertog Boomverzorging, telefoon 06 18781279, e-mail hertogboomverzorging@gmail.com"
-  },
-  {
     "naam": "Wenskaarten Lineke van de Kamp",
     "afbeelding": "img/sponsors/wenskaarten-lineke.jpg",
     "url": "",
-    "formaat": "staand",
+    "formaat": "liggend",
     "alt": "Advertentie Wenskaarten van Lineke van de Kamp, telefoon 06 40682052. Gefeliciteerd, beterschap, jubileum, geboorte en meer. Verkrijgbaar op de Winterfair en het hele jaar door."
   },
   {
     "naam": "Marty groen & sfeer",
     "afbeelding": "img/sponsors/marty.jpg",
     "url": "",
-    "formaat": "staand",
+    "formaat": "liggend",
     "alt": "Advertentie Marty groen en sfeer, Veenendaal: krans, toef, kerststuk, voederkrans en decoratie op de Winterfair. Marianne 06 57255674."
   },
   {
     "naam": "JufMeester",
     "afbeelding": "img/sponsors/jufmeester.jpg",
     "url": "https://www.jufmeester.nl",
-    "formaat": "staand",
+    "formaat": "midden",
     "alt": "Advertentie JufMeester: brede ervaring opdoen als juf of meester op diverse scholen, met regie over je eigen agenda"
-  },
-  {
-    "naam": "Mate4Cars",
-    "afbeelding": "img/sponsors/mate4cars.jpg",
-    "url": "https://www.mate4cars.nl",
-    "formaat": "staand",
-    "alt": "Advertentie Mate4Cars, dé specialist in stoelhoezen: bij een bestelling van een stoelhoes gaat 20% van de opbrengst naar het goede doel, actie loopt tot 12 december 2026. Telefoon 06-51746100."
   },
   {
     "naam": "deKolenboer.nl",
@@ -82,19 +82,5 @@
     "url": "https://www.dekolenboer.nl",
     "formaat": "breed",
     "alt": "Advertentie deKolenboer.nl, webshop voor kolen: antraciet, eierkolen, vetkolen en Record bruinkoolbriketten. Telefoon 0318 512187."
-  },
-  {
-    "naam": "Buitenhorst",
-    "afbeelding": "img/sponsors/buitenhorst.jpeg",
-    "url": "https://www.buitenhorstverssmakelijk.nl/",
-    "formaat": "staand",
-    "alt": "Logo Buitenhorst, vers en smakelijk"
-  },
-  {
-    "naam": "Kaas van het Huis",
-    "afbeelding": "img/sponsors/kaas-van-het-huis.jpeg",
-    "url": "",
-    "formaat": "staand",
-    "alt": "Logo Kaas van het Huis"
   }
 ]

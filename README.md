@@ -170,7 +170,8 @@ Het script rekent prijzen en totaal zelf uit met de prijzen in de Sheet. Wat de 
    }
    ```
 
-   - `formaat`: `breed` (over de hele breedte) of `staand` (half, twee naast elkaar).
+   - `formaat`: `breed` (over de hele breedte), `staand` of `liggend` (half, twee naast elkaar), of `midden` (half, alleen op een rij in het midden).
+   - De volgorde in het bestand is de volgorde op de pagina. Zet advertenties met een vergelijkbare vorm na elkaar, dan worden ze in een rij even hoog zonder grote witte randen.
    - `url`: laat leeg (`""`) als er geen website is. De advertentie is dan niet klikbaar.
    - `alt`: korte beschrijving voor mensen die de afbeelding niet zien. Mag je weglaten; dan wordt het "Advertentie" + naam.
 3. Upload beide bestanden naar GitHub. Na een paar minuten staat de sponsor op de pagina.

@@ -394,7 +394,8 @@
       .then(function (sponsors) {
         sponsors.forEach(function (s) {
           var url = (s.url || '').trim();
-          var kaart = maak(url ? 'a' : 'div', 'sponsor' + (s.formaat === 'breed' ? ' sponsor--breed' : ''));
+          var formaat = /^(breed|midden)$/.test(s.formaat) ? ' sponsor--' + s.formaat : '';
+          var kaart = maak(url ? 'a' : 'div', 'sponsor' + formaat);
           var img = maak('img');
           img.src = s.afbeelding;
           img.alt = s.alt || ('Advertentie ' + s.naam);
