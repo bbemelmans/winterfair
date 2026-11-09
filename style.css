@@ -223,6 +223,8 @@ a.sponsor:hover .sponsor__link { text-decoration: underline; }
 .voet__titel { font-family: var(--kop-font); font-size: 28px; font-weight: 600; line-height: 1.1; }
 .voet a { color: var(--goud); min-height: 44px; display: inline-flex; align-items: center; }
 .voet a:hover { color: var(--wit); }
+.voet__adres { gap: 6px; }
+.voet__icoon { flex: none; }
 .voet :focus-visible { outline-color: var(--goud); }
 
 @media (min-width: 600px) {
