@@ -81,18 +81,21 @@ button, a, input, textarea { touch-action: manipulation; }
 /* Flyer */
 .flyer { width: 100%; max-width: var(--breedte); margin: 0 auto; }
 
-/* Kerninfo */
-.info { padding-top: 28px; padding-bottom: 8px; display: flex; flex-direction: column; gap: 16px; }
-.info__kaarten { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-.kaart { background: var(--wit); border: 1px solid var(--lijn); border-radius: 12px; padding: 14px; }
-.kaart__label {
-  margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.06em;
-  text-transform: uppercase; color: var(--label-bruin);
-}
-.kaart__groot { font-family: var(--kop-font); font-size: 26px; font-weight: 600; margin-top: 4px; line-height: 1.05; }
-.kaart__klein { font-size: 15px; margin-top: 2px; display: inline-block; }
-a.kaart__klein { min-height: 44px; display: inline-flex; align-items: center; margin-top: -6px; margin-bottom: -10px; }
+/* Wat vind je op de Winterfair */
+.info { padding-top: 28px; padding-bottom: 28px; display: flex; flex-direction: column; gap: 14px; }
 .info__tekst { font-size: 16px; line-height: 1.55; }
+.kraampjes { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.kraampje {
+  display: flex; gap: 14px; align-items: flex-start; background: var(--wit);
+  border: 1px solid var(--lijn); border-radius: 12px; padding: 14px;
+}
+.kraampje__icoon {
+  flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--vlak-licht);
+  display: flex; align-items: center; justify-content: center; font-size: 22px; line-height: 1;
+}
+.kraampje__titel { font-family: var(--kop-font); font-size: 26px; font-weight: 600; line-height: 1.05; margin: 0 0 4px; }
+.kraampje p { font-size: 15px; line-height: 1.5; margin: 0; }
+.info__opbrengst { font-size: 15px; font-style: italic; color: var(--tekst-zacht); }
 
 /* Knoppen */
 .knop {
@@ -229,5 +232,4 @@ a.sponsor:hover .sponsor__link { text-decoration: underline; }
 
 @media (min-width: 600px) {
   .sectietitel { font-size: 44px; }
-  .info__kaarten { gap: 16px; }
 }
