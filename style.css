@@ -186,6 +186,11 @@ button, a, input, textarea { touch-action: manipulation; }
   font-size: 15px; line-height: 1.35;
 }
 .keuze input { width: 22px; height: 22px; margin: 0; flex: none; accent-color: var(--bordeaux); }
+.keuze__voorkeur {
+  display: inline-block; margin-left: 4px; padding: 2px 8px; border-radius: 999px;
+  background: var(--bordeaux); color: var(--wit); font-size: 12px; font-weight: 600; vertical-align: 1px;
+}
+.keuze__uitleg { display: block; font-size: 14px; color: var(--tekst-zacht); margin-top: 2px; }
 .keuze:has(input:checked) { border: 2px solid var(--bordeaux); padding: 9px 13px; }
 .privacy { font-size: 12px; line-height: 1.5; color: var(--tekst-klein); }
 
