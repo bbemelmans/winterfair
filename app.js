@@ -435,7 +435,7 @@
   var boekenFlyer = document.getElementById('boeken-flyer');
   if (boekenFlyer) {
     boekenFlyer.addEventListener('click', function () {
-      toonFoto('img/boekenactie.jpg', { product: 'Boeken bestelactie', omschrijving: 'Bestellen via Marianne: 06 57 25 56 74' });
+      toonFoto('img/boekenactie.jpg', { product: 'Boekenbestelactie', omschrijving: 'Bestellen via Marianne: 06 57 25 56 74' });
     });
   }
 
