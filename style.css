@@ -208,6 +208,24 @@ button, a, input, textarea { touch-action: manipulation; }
 .bevestiging__totaal { display: flex; justify-content: space-between; align-items: baseline; font-weight: 600; }
 .bevestiging__totaal span:last-child { font-family: var(--kop-font); font-size: 28px; font-weight: 700; }
 
+/* Boeken bestelactie */
+.boeken { padding-top: 32px; display: flex; flex-direction: column; gap: 14px; }
+.boeken__kaart {
+  display: flex; flex-direction: column; gap: 10px; background: var(--wit);
+  border: 2px solid var(--bordeaux); border-radius: 12px; padding: 16px;
+}
+.boeken__kaart > p { font-size: 15px; line-height: 1.5; margin: 0; }
+.boeken__titel { font-family: var(--kop-font); font-size: 30px; font-weight: 600; line-height: 1.05; margin: 0; }
+.boeken__rij { display: flex; gap: 14px; align-items: center; }
+.boeken__flyer {
+  flex: none; width: 104px; padding: 0; border: 1px solid var(--lijn); border-radius: 8px;
+  overflow: hidden; background: none; cursor: zoom-in;
+}
+.boeken__flyer img { display: block; width: 100%; height: auto; }
+.boeken__punten { margin: 0; padding-left: 18px; font-size: 15px; line-height: 1.5; display: flex; flex-direction: column; gap: 4px; }
+.boeken__tip { list-style: none; margin-left: -18px; font-size: 13px; color: var(--tekst-zacht); }
+@media (min-width: 600px) { .boeken__flyer { width: 150px; } }
+
 /* Sponsors */
 .sponsors { padding-top: 32px; padding-bottom: 32px; display: flex; flex-direction: column; gap: 16px; }
 /* Advertenties naast elkaar worden even hoog; de afbeelding blijft heel en staat in het midden. */

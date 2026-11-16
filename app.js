@@ -431,6 +431,14 @@
       .catch(function (err) { console.error('Sponsors laden mislukt', err); });
   }
 
+  // Flyer van de boekenactie groot bekijken.
+  var boekenFlyer = document.getElementById('boeken-flyer');
+  if (boekenFlyer) {
+    boekenFlyer.addEventListener('click', function () {
+      toonFoto('img/boekenactie.jpg', { product: 'Boeken bestelactie', omschrijving: 'Bestellen via Marianne: 06 57 25 56 74' });
+    });
+  }
+
   // Fotovenster sluit ook bij een tik naast de foto.
   document.getElementById('fotovenster').addEventListener('click', function (event) {
     if (event.target === event.currentTarget) event.currentTarget.close();
