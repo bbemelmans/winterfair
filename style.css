@@ -138,11 +138,16 @@ button, a, input, textarea { touch-action: manipulation; }
 }
 
 .fotovenster {
-  width: min(92vw, 520px); padding: 16px; border: 0; border-radius: 16px;
+  width: min(92vw, 520px); max-height: calc(100dvh - 24px); padding: 16px; border: 0; border-radius: 16px;
   background: var(--achtergrond); color: var(--donkergroen);
 }
 .fotovenster::backdrop { background: rgba(46, 58, 47, 0.75); }
-.fotovenster img { width: 100%; border-radius: 12px; border: 2px solid var(--bordeaux); }
+/* Foto past altijd in beeld: hoogte min. ruimte voor titel, tekst en knop. */
+.fotovenster img {
+  display: block; width: auto; max-width: 100%; margin: 0 auto;
+  max-height: calc(100vh - 210px); max-height: calc(100dvh - 210px);
+  border-radius: 12px; border: 2px solid var(--bordeaux);
+}
 .fotovenster__titel { margin: 12px 0 0; font-family: var(--kop-font); font-size: 30px; font-weight: 700; line-height: 1.1; }
 .fotovenster__tekst { margin: 2px 0 12px; font-style: italic; color: var(--label-bruin); }
 .fotovenster__tekst:empty { margin-bottom: 8px; }
