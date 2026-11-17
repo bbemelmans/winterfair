@@ -81,6 +81,8 @@ button, a, input, textarea { touch-action: manipulation; }
 /* Flyer */
 .flyer { width: 100%; max-width: var(--breedte); margin: 0 auto; }
 
+.bestellen__tip { font-size: 14px; color: var(--tekst-zacht); margin-top: -4px; }
+
 /* Wat vind je op de Winterfair */
 .info { padding-top: 28px; padding-bottom: 28px; display: flex; flex-direction: column; gap: 14px; }
 .info__tekst { font-size: 16px; line-height: 1.55; }
